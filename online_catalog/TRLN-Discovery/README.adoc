@@ -1,0 +1,22 @@
+:toc:
+:toc-placement!:
+
+= Non-MARC metadata extract and transformation for TRLN Discovery online catalog
+
+See https://internal.lib.unc.edu/wikis/staff/index.php/TRLN_Discovery_(online_catalog)[documentation on staff wiki] for general info/definitions and links to further info.
+
+== TRLN Discovery data model
+
+"Argot" -- the intermediary data language we're using
+
+https://github.com/trln/data-documentation/tree/master/argot
+
+argot.xlsx - main spreadsheet with Argot field definitions and source data-to-Argot mapping rules
+
+_fields.csv - quick look at fields tab from argot.xlsx
+
+_mappings.csv - quick look at mappings tap from argot.xlsx
+
+https://github.com/trln/data-documentation/tree/master/argot/spec_docs
+
+Data mapping examples, very MARC-centric at this point. 
