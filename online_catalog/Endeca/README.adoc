@@ -6,7 +6,7 @@
 == Endeca data model
 Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls
 
-See Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls[Endeca data model info on staff wiki] for more info 
+See https://internal.lib.unc.edu/wikis/staff/index.php/Endeca#Data_model[Endeca data model info on staff wiki] for more info 
 
 == Contents - Main folders
 === digital_collections_and_IR

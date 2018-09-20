@@ -9,14 +9,15 @@ See https://internal.lib.unc.edu/wikis/staff/index.php/TRLN_Discovery_(online_ca
 
 "Argot" -- the intermediary data language we're using
 
-https://github.com/trln/data-documentation/tree/master/argot
+Documentation/specification is at: https://github.com/trln/data-documentation/tree/master/argot
 
-argot.xlsx - main spreadsheet with Argot field definitions and source data-to-Argot mapping rules
+*Files in that directory include:*
 
-_fields.csv - quick look at fields tab from argot.xlsx
+* argot.xlsx - main spreadsheet with Argot field definitions and source data-to-Argot mapping rules
+* _fields.csv - quick look at fields tab from argot.xlsx
+* _mappings.csv - quick look at mappings tab from argot.xlsx
 
-_mappings.csv - quick look at mappings tap from argot.xlsx
 
-https://github.com/trln/data-documentation/tree/master/argot/spec_docs
+Data mapping examples, very MARC-centric at this point are in: https://github.com/trln/data-documentation/tree/master/argot/spec_docs
 
-Data mapping examples, very MARC-centric at this point. 
+
