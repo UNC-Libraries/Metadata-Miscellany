@@ -6,6 +6,8 @@
 * ETDs from CDR https://internal.lib.unc.edu/wikis/staff/index.php/ETDs_in_Endeca[more info]
 * Masters papers from CDR https://internal.lib.unc.edu/wikis/staff/index.php/Master%27s_Papers_in_public_catalog[more info]
 
+http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&Ne=206582&eneHost=trlnr610c.trln.org&N=206587+210959[Raw Endeca records from this pipeline] -- Use Digital Collection facet to narrow down
+
 === EAD
 EAD finding aids for UNC (and some we host for NCCU)
 
@@ -15,17 +17,23 @@ This makes the records searchable by keywords in the EAD.
 
 See https://internal.lib.unc.edu/wikis/staff/index.php/EAD_data_in_Endeca[EAD Content in Endeca on Staff Wiki] for more details on EAD handling.
 
+http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&eneHost=trlnr610c.trln.org&Ne=206582&N=206587+210858[Raw Endeca records with data merged in from this pipeline]
+
 === ICPSR
 Datasets from https://www.icpsr.umich.edu/icpsrweb/ICPSR/[Inter-university Consortium for Political and Social Research] data catalog
 
 http://archive.trln.org/endeca/shared-records-technical-details.html[TRLN Shared Records] hosted/managed by UNC
 
-=== Odum Dataverse
+http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&Ne=206582&eneHost=trlnr610c.trln.org&N=206587+210945[Raw Endeca records from this pipeline]
+
+=== Dataverse
 Datasets from https://dataverse.unc.edu/dataverse/odum[Odum Institute Archive Dataverse]
 
 *Question*: https://dataverse.unc.edu/dataverse/odum[Odum Institute Archive Dataverse] vs. https://dataverse.unc.edu/dataverse/unc;jsessionid=7f67b80e9084e953f5d49826e919?q=&fq0=metadataSource%3A%22UNC+Dataverse%22&types=dataverses%3Adatasets&sort=dateSort&order=desc[UNC Dataverse] -- should we be mapping in both?
 
 http://archive.trln.org/endeca/shared-records-technical-details.html[TRLN Shared Records] hosted/managed by UNC
+
+http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&Ne=206582&eneHost=trlnr610c.trln.org&N=206587+211056[Raw Endeca records from this pipeline]
 
 == Contents -- inside each folder
 === extract
@@ -36,5 +44,9 @@ In some cases, these scripts include some minor transformation logic, used to pr
 === transform
 XSLT and related files used within the Endeca ingest/transformation process to transform the source data into the Endeca data model.
 
+Also includes sample source data files. 
+
 == Endeca data model
 Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls
+
+See Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls[Endeca data model info on staff wiki] for more info 
