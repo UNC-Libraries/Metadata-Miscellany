@@ -1,0 +1,23 @@
+= Non-MARC metadata extract and transformation for Endeca online catalog
+
+== Contents
+=== digital_collections_and_IR
+* Selected CDM collections (see extract/collections.txt for list)
+* ETDs from CDR [more info|https://internal.lib.unc.edu/wikis/staff/index.php/ETDs_in_Endeca]
+* Masters papers from CDR [more info|https://internal.lib.unc.edu/wikis/staff/index.php/Master%27s_Papers_in_public_catalog]
+
+=== EAD
+EAD finding aids for UNC (and some we host for NCCU)
+
+Assumption is that there is a MARC record in ILS for each collection having an EAD. These MARC records have been transformed into Endeca records for the collections. EAD data is transformed into Endeca data model and merged into the matching Endeca record (with ILS MARC as source).
+
+This makes the records searchable by keywords in the EAD.
+
+See [EAD Content in Endeca on Staff Wiki|https://internal.lib.unc.edu/wikis/staff/index.php/EAD_data_in_Endeca] for more details on EAD handling.
+
+=== ICPSR
+Datasets from Inter-university Consortium for Political and Social Research
+
+[TRLN Shared Records|http://archive.trln.org/endeca/shared-records-technical-details.html] hosted/managed by UNC
+
+* Odum Dataverse -- datasets from Odum Datavers - TRLN Shared Records hosted/managed by UNC
