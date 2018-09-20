@@ -1,4 +1,11 @@
+:toc:
+:toc-placement!:
 = Non-MARC metadata extract and transformation for Endeca online catalog
+
+== Endeca data model
+Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls
+
+See Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls[Endeca data model info on staff wiki] for more info 
 
 == Contents - Main folders
 === digital_collections_and_IR
@@ -45,8 +52,3 @@ In some cases, these scripts include some minor transformation logic, used to pr
 XSLT and related files used within the Endeca ingest/transformation process to transform the source data into the Endeca data model.
 
 Also includes sample source data files. 
-
-== Endeca data model
-Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls
-
-See Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-Endeca-Mappings.xls[Endeca data model info on staff wiki] for more info 
