@@ -8,15 +8,27 @@ Defined in Excel file at http://archive.trln.org/endeca/private/data-model/TRLN-
 
 See https://internal.lib.unc.edu/wikis/staff/index.php/Endeca#Data_model[Endeca data model info on staff wiki] for more info 
 
-== Contents - Main folders
-=== digital_collections_and_IR
+== Contents
+=== property_mappings.xml
+Endeca has an intermediate set of "pre-pipeline" properties defined. The digital collections/IR XSL outputs pre-pipeline properties.
+
+These pre-pipeline properties get mapped to the final Endeca properties and dimensions during indexing.
+
+`property_mappings.xml` is the raw mapping configuration ripped out of the pipeline config files.
+
+PROP_NAME is the pre-pipeline property. TARGET_NAME is the Endeca property/dimension mapped to.
+
+(In Endeca, a "property" is just the term used for a field. Anything you want to display or search on is a property. "Dimensions" are a sub-category of properties. The main distinction is that dimensions power faceting and limiting (in advanced search).)
+
+=== Main folders
+==== digital_collections_and_IR
 * Selected CDM collections (see extract/collections.txt for list)
 * ETDs from CDR https://internal.lib.unc.edu/wikis/staff/index.php/ETDs_in_Endeca[more info]
 * Masters papers from CDR https://internal.lib.unc.edu/wikis/staff/index.php/Master%27s_Papers_in_public_catalog[more info]
 
 http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&Ne=206582&eneHost=trlnr610c.trln.org&N=206587+210959[Raw Endeca records from this pipeline] -- Use Digital Collection facet to narrow down
 
-=== EAD
+==== EAD
 EAD finding aids for UNC (and some we host for NCCU)
 
 Assumption is that there is a MARC record in ILS for each collection having an EAD. These MARC records have been transformed into Endeca records for the collections. EAD data is transformed into Endeca data model and merged into the matching Endeca record (with ILS MARC as source).
@@ -27,14 +39,14 @@ See https://internal.lib.unc.edu/wikis/staff/index.php/EAD_data_in_Endeca[EAD Co
 
 http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&eneHost=trlnr610c.trln.org&Ne=206582&N=206587+210858[Raw Endeca records with data merged in from this pipeline]
 
-=== ICPSR
+==== ICPSR
 Datasets from https://www.icpsr.umich.edu/icpsrweb/ICPSR/[Inter-university Consortium for Political and Social Research] data catalog
 
 http://archive.trln.org/endeca/shared-records-technical-details.html[TRLN Shared Records] hosted/managed by UNC
 
 http://trlnr610c.trln.org:8888/endeca_jspref/controller.jsp?sid=13704A964F65&enePort=8070&Ne=206582&eneHost=trlnr610c.trln.org&N=206587+210945[Raw Endeca records from this pipeline]
 
-=== Dataverse
+==== Dataverse
 Datasets from https://dataverse.unc.edu/dataverse/odum[Odum Institute Archive Dataverse]
 
 *Question*: https://dataverse.unc.edu/dataverse/odum[Odum Institute Archive Dataverse] vs. https://dataverse.unc.edu/dataverse/unc;jsessionid=7f67b80e9084e953f5d49826e919?q=&fq0=metadataSource%3A%22UNC+Dataverse%22&types=dataverses%3Adatasets&sort=dateSort&order=desc[UNC Dataverse] -- should we be mapping in both?
