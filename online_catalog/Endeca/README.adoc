@@ -10,9 +10,12 @@ See https://internal.lib.unc.edu/wikis/staff/index.php/Endeca#Data_model[Endeca 
 
 == Contents
 === property_mappings.xml
-Endeca has an intermediate set of "pre-pipeline" properties defined. The digital collections/IR XSL outputs pre-pipeline properties.
+Endeca has an intermediate set of "pre-pipeline" properties defined.
 
 These pre-pipeline properties get mapped to the final Endeca properties and dimensions during indexing.
+
+The XSL collected here outputs pre-pipeline properties (in addition to some final Endeca properties).
+
 
 `property_mappings.xml` is the raw mapping configuration ripped out of the pipeline config files.
 
