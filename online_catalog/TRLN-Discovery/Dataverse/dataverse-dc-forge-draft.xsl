@@ -138,8 +138,10 @@
     "ID": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="Rollup"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="LocalId"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "PROP NAME="Item Types"": "Dataset,
-    "PROP NAME="Language"": "English",</xsl:template>
+    "PROP NAME="Item Types"": "Dataset",
+    "language":[
+        "English"
+    ],</xsl:template>
 
 
     <xsl:template match="*[local-name()='datestamp']">
@@ -241,7 +243,11 @@
 
     <xsl:template match="*[local-name()='title']">
         <xsl:param name="setSpec"/>
-    "PROP NAME="Title"": "<xsl:value-of select="normalize-space(.)"/>",
+    "title_main":[
+        {
+        "value": "<xsl:value-of select="normalize-space(.)"/>"
+        }
+    ],
     "PROP NAME="245sort"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
 
@@ -292,7 +298,9 @@
     <xsl:template name="writeGenre">
         <xsl:param name="string"/>
         <xsl:param name="pvalName"/>
-    "PROP NAME="Genre"": "<xsl:value-of select="normalize-space($string)"/>",</xsl:template>
+    "subject_genre":[
+        "<xsl:value-of select="normalize-space($string)"/>"
+    ],</xsl:template>
 
 
     <xsl:template match="*[local-name()='creator']">
@@ -314,7 +322,11 @@
 
     <xsl:template match="*[local-name()='date']">
         <xsl:param name="setSpec"/>
-    "PROP NAME="YearPublished"": "<xsl:value-of select="normalize-space(.)"/>",
+        <xsl:choose>
+            <xsl:when test="contains((.),'-')" >
+    "PROP NAME="YearPublished"": "<xsl:value-of select="substring-before((normalize-space(.)),'-')"/>",</xsl:when><xsl:otherwise>
+    "PROP NAME="YearPublished"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:otherwise>
+        </xsl:choose>
     "PROP NAME="DatePublished"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
 
