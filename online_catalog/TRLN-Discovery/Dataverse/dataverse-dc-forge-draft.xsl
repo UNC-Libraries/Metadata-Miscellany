@@ -135,8 +135,8 @@
                 <xsl:with-param name="by" select="$null"/>
             </xsl:call-template>
         </xsl:variable>
-    "ID": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "PROP NAME="Rollup"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
+    "id": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
+    "rollup_id": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="LocalId"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="Item Types"": "Dataset",
     "language":[
@@ -248,7 +248,7 @@
         "value": "<xsl:value-of select="normalize-space(.)"/>"
         }
     ],
-    "PROP NAME="245sort"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+    "title_sort": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
 
     <xsl:template match="*[local-name()='type']">
@@ -305,7 +305,12 @@
 
     <xsl:template match="*[local-name()='creator']">
         <xsl:param name="setSpec"/>
-    "PROP NAME="Creator"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+    "names":[
+        {
+            "name": "<xsl:value-of select="normalize-space(.)"/>"
+            "type": "creator"
+        }
+    ],</xsl:template>
 
 
     <xsl:template match="*[local-name()='rights']">
@@ -324,8 +329,12 @@
         <xsl:param name="setSpec"/>
         <xsl:choose>
             <xsl:when test="contains((.),'-')" >
-    "PROP NAME="YearPublished"": "<xsl:value-of select="substring-before((normalize-space(.)),'-')"/>",</xsl:when><xsl:otherwise>
-    "PROP NAME="YearPublished"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:otherwise>
+    "publication_year":[
+        <xsl:value-of select="substring-before((normalize-space(.)),'-')"/>
+    ],</xsl:when><xsl:otherwise>
+    "publication_year":[ 
+        <xsl:value-of select="normalize-space(.)"/>
+    ],</xsl:otherwise>
         </xsl:choose>
     "PROP NAME="DatePublished"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
@@ -470,7 +479,9 @@
     "PROP NAME="Notes"": "<xsl:value-of select="."/>",</xsl:when>
 
             <xsl:otherwise>
-    "PROP NAME="Abstract"": "<xsl:value-of select="."/>",</xsl:otherwise>
+    "note_summary":[
+        "<xsl:value-of select="."/>"
+    ],</xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
