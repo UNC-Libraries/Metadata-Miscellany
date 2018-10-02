@@ -204,9 +204,17 @@
         <xsl:apply-templates select="*[local-name()='date']"/>
 
         <xsl:apply-templates select="*[local-name()='publisher']"/>
-    "subject_topical":<xsl:for-each select="*[local-name()='subject']">
+    "subject_topical":[
+        <xsl:for-each select="*[local-name()='subject']">
         <xsl:apply-templates select="(.)"/>
-        <xsl:if test="position() != last()">
+        <xsl:if test="position() != last()">,
+        </xsl:if>
+    </xsl:for-each>
+    ],
+    "subject_headings":[<xsl:for-each select="*[local-name()='subject']">
+        {
+            "value":<xsl:apply-templates select="(.)"/>
+        }<xsl:if test="position() != last()">
             <xsl:text>,</xsl:text>
         </xsl:if>
     </xsl:for-each>
@@ -344,7 +352,9 @@
 
     <xsl:template match="*[local-name()='publisher']">
         <xsl:param name="setSpec"/>
-    "PROP NAME="Publisher"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+    "publisher":[
+        "<xsl:value-of select="normalize-space(.)"/>"
+    ],</xsl:template>
 
 
     <xsl:template match="*[local-name()='subject']">
@@ -405,8 +415,7 @@
         </xsl:variable>
         <xsl:variable name="doubledashspace">
             <xsl:text> -- </xsl:text>
-        </xsl:variable>
-        "<xsl:call-template name="string-replace-all">
+        </xsl:variable>"<xsl:call-template name="string-replace-all">
                     <xsl:with-param name="text" select="$newSubject"/>
                     <xsl:with-param name="replace" select="$doubledash"/>
                     <xsl:with-param name="by" select="$doubledashspace"/>
