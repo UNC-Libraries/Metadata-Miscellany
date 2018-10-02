@@ -204,10 +204,13 @@
         <xsl:apply-templates select="*[local-name()='date']"/>
 
         <xsl:apply-templates select="*[local-name()='publisher']"/>
-
-        <xsl:apply-templates select="*[local-name()='subject']"/>
-
-        <xsl:apply-templates select="*[local-name()='coverage']">
+    "subject_topical":<xsl:for-each select="*[local-name()='subject']">
+        <xsl:apply-templates select="(.)"/>
+        <xsl:if test="position() != last()">
+            <xsl:text>,</xsl:text>
+        </xsl:if>
+    </xsl:for-each>
+    ],<xsl:apply-templates select="*[local-name()='coverage']">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
@@ -349,7 +352,7 @@
         <xsl:call-template name="parseSubject">
             <xsl:with-param name="list" select="."/>
         </xsl:call-template>
-
+        
     </xsl:template>
 
 
@@ -397,23 +400,17 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-
         <xsl:variable name="doubledash">
             <xsl:text>--</xsl:text>
         </xsl:variable>
         <xsl:variable name="doubledashspace">
             <xsl:text> -- </xsl:text>
         </xsl:variable>
-    "PROP NAME="Subject"": "<xsl:call-template name="string-replace-all">
+        "<xsl:call-template name="string-replace-all">
                     <xsl:with-param name="text" select="$newSubject"/>
                     <xsl:with-param name="replace" select="$doubledash"/>
                     <xsl:with-param name="by" select="$doubledashspace"/>
-                </xsl:call-template>",
-    "PROP NAME="Subjects"": "<xsl:call-template name="string-replace-all">
-                    <xsl:with-param name="text" select="$newSubject"/>
-                    <xsl:with-param name="replace" select="$doubledash"/>
-                    <xsl:with-param name="by" select="$doubledashspace"/>
-                </xsl:call-template>",</xsl:template>
+        </xsl:call-template>"</xsl:template>
 
 
     <xsl:template match="*[local-name()='coverage']">
