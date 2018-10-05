@@ -135,7 +135,7 @@
                 <xsl:with-param name="by" select="$null"/>
             </xsl:call-template>
         </xsl:variable>
-    "id": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
+    "id": "<xsl:text>UNCDataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "rollup_id": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="LocalId"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="Item Types"": "Dataset",
@@ -185,7 +185,7 @@
 
     <xsl:template match="*[local-name()='dc']">
         <xsl:param name="setSpec"/>
-
+        
         <xsl:call-template name="Conditions"/>
 
         <xsl:apply-templates select="*[local-name()='title']">
@@ -210,9 +210,11 @@
             </xsl:with-param>
         </xsl:apply-templates>
 
+        <xsl:apply-templates select="*[local-name()='publisher']" mode="imprint"/>
+
         <xsl:apply-templates select="*[local-name()='date']"/>
 
-        <xsl:apply-templates select="*[local-name()='publisher']"/>
+        <xsl:apply-templates select="*[local-name()='publisher']" mode="publisher"/>
     "subject_topical":[
         <xsl:for-each select="*[local-name()='subject']">
         <xsl:apply-templates select="(.)"/>
@@ -327,8 +329,9 @@
         <xsl:param name="setSpec"/>
     "names":[
         {
-            "name": "<xsl:value-of select="normalize-space(.)"/>"
-            "type": "creator"
+            "name": "<xsl:value-of select="normalize-space(.)"/>",
+            "type": "creator",
+            "rel": "creator"
         }
     ],</xsl:template>
 
@@ -359,12 +362,33 @@
     "PROP NAME="DatePublished"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
 
-    <xsl:template match="*[local-name()='publisher']">
+    <xsl:template match="*[local-name()='publisher']" mode="publisher">
         <xsl:param name="setSpec"/>
     "publisher":[
         "<xsl:value-of select="normalize-space(.)"/>"
     ],</xsl:template>
 
+    <xsl:template match="*[local-name()='publisher']" mode="imprint">
+        <xsl:param name="setSpec"/>
+        
+        <xsl:variable name="imprintDate">
+            <xsl:for-each
+                select="../*[local-name()='date']">
+                <xsl:choose>
+                    <xsl:when test="contains((.),'-')" >
+                        <xsl:value-of select="substring-before((normalize-space(.)),'-')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="normalize-space(.)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:for-each>
+        </xsl:variable>
+        
+    'imprint_main': [
+        "{\"type\": \"publication\",\"value\": \"<xsl:value-of select="normalize-space(.)"/>, <xsl:value-of select="$imprintDate"/>\"}"
+    ],</xsl:template>
+    
 
     <xsl:template match="*[local-name()='subject']">
 
