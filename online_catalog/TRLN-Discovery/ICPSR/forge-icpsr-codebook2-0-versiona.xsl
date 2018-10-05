@@ -612,11 +612,7 @@
     <xsl:template match="anlyUnit"> </xsl:template>
     <xsl:template match="universe">
         <!-- Universe -->
-    "PROP NAME="567""
-                <xsl:text>Universe: </xsl:text>
-                <xsl:apply-templates/>
-
-
+    "PROP NAME="567"": "<xsl:text>Universe: </xsl:text><xsl:apply-templates/>",
     </xsl:template>
     <!--xsl:template match="dataKind">
  
@@ -710,10 +706,7 @@
         </xsl:template>-->
     <!-- Collection Mode -->
     <xsl:template match="collMode">
-    "PROP NAME="567""
-        <xsl:text>Data Source: </xsl:text>
-        <xsl:apply-templates/>
-        
+    "PROP NAME="567"": "<xsl:text>Data Source: </xsl:text><xsl:apply-templates/>",
     </xsl:template>
     <!--    <xsl:template match="resInstru">
         <tr>
@@ -739,9 +732,7 @@
 
     <xsl:template match="dataSrc">
         <!-- Data source -->
-    "PROP NAME="567""
-                <xsl:text>Data Source: </xsl:text>
-                <xsl:apply-templates/>
+    "PROP NAME="567"", "<xsl:text>Data Source: </xsl:text><xsl:apply-templates/>",
     </xsl:template>
     <!--
     <xsl:template match="srcOrig">
@@ -1075,8 +1066,7 @@
     </xsl:template>-->
     <xsl:template match="conditions">
         <!-- Access Restrictions -->
-    "PROP NAME="506""
-                <xsl:apply-templates select="p"/>
+    "PROP NAME="506"": "<xsl:apply-templates select="p"/>
     </xsl:template>
     <xsl:template match="disclaimer">
         <tr>
@@ -1091,7 +1081,7 @@
                     <xsl:apply-templates/>
                 </p>
             </td>
-        </tr>
+        </tr>"
     </xsl:template>
 
     <xsl:template match="othrStdyMat">
@@ -1253,9 +1243,7 @@
                     <xsl:apply-templates select="dimensns"/>-->
 
         <xsl:for-each select="fileType">
-    "PROP NAME="Notes""
-                Type of File: <xsl:text> </xsl:text>
-                    <xsl:value-of select="normalize-space(.)"/>
+    "PROP NAME="Notes"": "Type of File: <xsl:text> </xsl:text><xsl:value-of select="normalize-space(.)"/>"
         </xsl:for-each>
 
 
@@ -2398,17 +2386,9 @@
 
     <xsl:template match="notes" mode="contents">
         <!-- Contents -->
-    "PROP NAME="500""
-                <xsl:text>Contents: </xsl:text>
-                <xsl:value-of select="$fileCount"/>
-                <xsl:text> data file</xsl:text>
-                <xsl:if test="$fileCount&gt;1">
-                    <xsl:text>s</xsl:text>
+    "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="$fileCount"/><xsl:text> data file</xsl:text><xsl:if test="$fileCount&gt;1"><xsl:text>s</xsl:text>",
                 </xsl:if>               
-    "PROP NAME="500""
-                <xsl:text>Contents: </xsl:text>
-                
-                <xsl:value-of select="normalize-space(.)"/>
+    "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
 
     <xsl:template match="Link"> &#160;(<a href="#{@refs}">link</a>) </xsl:template>
@@ -2416,12 +2396,7 @@
     <xsl:template match="ExtLink"> (<a href="{@URI}">external link</a>) </xsl:template>
 
     <xsl:template match="ExtLink" mode="author">
-    "PROP NAME="Other Authors""
-                <xsl:value-of select="normalize-space($prodplace)"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="normalize-space($producer)"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="substring ($proddate, 1, 4)"/>
+    "PROP NAME="Other Authors"": "<xsl:value-of select="normalize-space($prodplace)"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space($producer)"/><xsl:text> </xsl:text><xsl:value-of select="substring ($proddate, 1, 4)"/>",
     </xsl:template>
 
     <xsl:template match="p">
