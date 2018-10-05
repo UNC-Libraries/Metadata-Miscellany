@@ -139,6 +139,15 @@
     "rollup_id": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="LocalId"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "PROP NAME="Item Types"": "Dataset",
+    "resource_type": ["Dataset – Statistical"],
+    "access_type": ["Online"],
+    "institution": ["unc", "duke", "nccu", "ncsu"],
+    "owner": "unc",
+    "available": "Available",
+    "record_data_source’:["Shared Records", "Dataverse"],
+    "virtual_collection":[
+    "TRLN Shared Records. Odum Institute Dataverse."
+    ]
     "language":[
         "English"
     ],</xsl:template>
