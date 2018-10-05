@@ -137,8 +137,10 @@
         </xsl:variable>
     "id": "<xsl:text>UNCDataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
     "rollup_id": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "PROP NAME="LocalId"": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "PROP NAME="Item Types"": "Dataset",
+    "local_id": {
+        "other": [],
+        "value": "<xsl:text>Dataverse</xsl:text><xsl:value-of select="$UniqueId"/>"
+    },
     "resource_type": ["Dataset – Statistical"],
     "access_type": ["Online"],
     "institution": ["unc", "duke", "nccu", "ncsu"],
@@ -146,7 +148,7 @@
     "available": "Available",
     "record_data_source’:["Shared Records", "Dataverse"],
     "virtual_collection":[
-    "TRLN Shared Records. Odum Institute Dataverse."
+        "TRLN Shared Records. Odum Institute Dataverse."
     ]
     "language":[
         "English"
@@ -168,8 +170,9 @@
                 <xsl:with-param name="by" select="$null"/>
             </xsl:call-template>
         </xsl:variable>
-    "PROP NAME="DateCataloged"": "<xsl:value-of select="substring($dateCataloged,1,8)"/>"
-    "PROP NAME="909"": "<xsl:value-of select="substring($dateCataloged,1,8)"/>"</xsl:template>
+    "date_cataloged": [
+        "<xsl:value-of select="substring($dateCataloged,1,8)"/>"
+    ],</xsl:template>
 
 
     <xsl:template match="*[local-name()='metadata']">
@@ -359,7 +362,7 @@
         <xsl:value-of select="normalize-space(.)"/>
     ],</xsl:otherwise>
         </xsl:choose>
-    "PROP NAME="DatePublished"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+    </xsl:template>
 
 
     <xsl:template match="*[local-name()='publisher']" mode="publisher">
@@ -383,8 +386,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:for-each>
-        </xsl:variable>
-        
+        </xsl:variable>       
     'imprint_main': [
         "{\"type\": \"publication\",\"value\": \"<xsl:value-of select="normalize-space(.)"/>, <xsl:value-of select="$imprintDate"/>\"}"
     ],</xsl:template>
