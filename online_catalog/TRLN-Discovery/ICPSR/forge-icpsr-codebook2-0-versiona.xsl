@@ -247,18 +247,10 @@
     "PROP NAME="Notes"": "<xsl:text>Contact Persons: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
     <xsl:template match="depositr">
-    "PROP NAME="Notes""
-                            <xsl:text>Depositor: </xsl:text>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="Notes"": "<xsl:text>Depositor: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
     <xsl:template match="depDate">
-    "PROP NAME="Notes""
-                            <xsl:text>Deposited: </xsl:text>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="Notes"": "<xsl:text>Deposited: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
 
     <xsl:template match="distDate">
@@ -267,27 +259,14 @@
         </xsl:variable>
 
         <!-- PubDateSort property and Publication Year Facet-->
-    "PROP NAME="008PubDate""
-                            <xsl:value-of select="substring ($distDate, 1, 4)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="008PubDate"": "<xsl:value-of select="substring ($distDate, 1, 4)"/>",
         <!--        <PROP NAME="Publication Year">
             <PVAL>
                 <xsl:value-of select="substring ($distDate, 1, 4)"/>
             </PVAL>
             </PROP>-->
         <!-- DateCataloged -->
-    "PROP NAME="909""
-            <PVAL>
-                <xsl:value-of select="substring ($distDate, 1, 4)"/>
-                <xsl:value-of select="substring ($distDate, 6, 2)"/>
-                <xsl:value-of select="substring ($distDate, 9, 2)"/>
-            </PVAL>
-        </PROP>
-
-
-
-
+    "PROP NAME="909"": "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>",
     </xsl:template>
     <xsl:template match="serStmt">
         <xsl:apply-templates select="serName"/>
@@ -295,45 +274,17 @@
     </xsl:template>
     <xsl:template match="serName">
         <!-- Series Statement -->
-    "PROP NAME="440""
-            <PVAL>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="440"": "<xsl:value-of select="normalize-space(.)"/>",
         <!-- Series -->
-    "PROP NAME="800""
-            <PVAL>
-                <xsl:value-of select="normalize-space(.)"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="$ICPSR-id"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="800"": "<xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
         <!-- Series title index-->
-    "PROP NAME="800t""
-            <PVAL>
-                <xsl:value-of select="normalize-space(.)"/>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="$ICPSR-id"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="800t"": "<xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
         <!-- Series -->
-    "PROP NAME="800""
-            <PVAL>
-                <xsl:text>ICPSR </xsl:text>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="$ICPSR-id"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="800"": "<xsl:text>ICPSR </xsl:text><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
         <!-- Series title index-->
-    "PROP NAME="800t""
-            <PVAL>
-                <xsl:text>ICPSR </xsl:text>
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="$ICPSR-id"/>
-            </PVAL>
-        </PROP>
-
+    "PROP NAME="800t"": "<xsl:text>ICPSR </xsl:text><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
     </xsl:template>
+
     <xsl:template match="serInfo"> </xsl:template>
     <xsl:template match="verStmt">
         <xsl:if test="position()=last()">
@@ -345,30 +296,15 @@
     <xsl:template match="version">
         <xsl:if test="@date">
             <!-- Indexed Notes -->
-    "PROP NAME="500""
-                <PVAL>
-                    <xsl:text>Title from ICPSR DDI metadata of </xsl:text>
-                    <xsl:value-of select="@date"/>
-                </PVAL>
-            </PROP>
-        </xsl:if>   </xsl:template>
+    "PROP NAME="500"": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>",
+        </xsl:if></xsl:template>
     <xsl:template match="verResp" mode="row">
-    "PROP NAME="Version Responsibility:""
-            <PVAL>
-                <xsl:text>Version Responsibility: </xsl:text>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
     <xsl:template match="biblCit"> </xsl:template>
     <xsl:template match="holdings"> </xsl:template>
     <xsl:template match="guide">
-    "PROP NAME="Note:""
-            <PVAL>
-                <xsl:text>Guide to Codebook: </xsl:text>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="Note"": "<xsl:text>Guide to Codebook: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
     <xsl:template match="docStatus"> </xsl:template>
 
@@ -415,20 +351,13 @@
             <xsl:value-of select="normalize-space(.)"/>
         </xsl:variable>
         <!-- Subject facet -->
-    "PROP NAME="600a""
-            <PVAL>
-
-                <xsl:value-of
+    "PROP NAME="600a"": "<xsl:value-of
                     select="concat(translate(substring($subject,
                 1,1),'abcdefghijklmnopqrstuvwxyz',
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
-                />
-            </PVAL>
-        </PROP>
+                />",
         <!-- Subjects property and Subject Headings Facet-->
-    "PROP NAME="600""
-            <PVAL>
-                <xsl:text>seq</xsl:text>
+    "PROP NAME="600"": "<xsl:text>seq</xsl:text>
                 <xsl:choose>
                     <xsl:when test="$count&lt;10">
                         <xsl:text>00</xsl:text>
@@ -445,10 +374,7 @@
                     select="concat(translate(substring($subject,
                     1,1),'abcdefghijklmnopqrstuvwxyz',
                     'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
-                />
-            </PVAL>
-        </PROP>
-        
+                />",
         <!-- Subject Headings Facet -->
 <!--        <PROP NAME="Subject Headings">
             <PVAL>
@@ -464,23 +390,14 @@
     <xsl:template match="topcClas">
         <!-- need to insert seq00n| for each keyword -->
         <!-- Subject Facet -->
-    "PROP NAME="600a""
-            <PVAL>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
-        
+    "PROP NAME="600a"": "<xsl:value-of select="normalize-space(.)"/>",
 <!--        <PROP NAME="Subject Heading">
             <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
             </PVAL>
         </PROP>-->
         <!-- Subjects property and subject headings facet -->
-    "PROP NAME="600""
-            <PVAL>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+    "PROP NAME="600"": "<xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
 
 
@@ -489,9 +406,7 @@
             <xsl:number/>
         </xsl:variable>
         <!-- Summary -->
-    "PROP NAME="520""
-            <PVAL>
-                <xsl:text>seq</xsl:text>
+    "PROP NAME="520"": "<xsl:text>seq</xsl:text>
                 <xsl:choose>
                     <xsl:when test="$count&lt;10">
                         <xsl:text>00</xsl:text>
@@ -504,26 +419,16 @@
                         <xsl:text>|</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
+                <xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
 
     <xsl:template match="sumDscr">
         <xsl:if test="timePrd">
             <!-- Note -->
-    "PROP NAME="518""
-                <PVAL>
-                    <xsl:text>Time Period: </xsl:text>
-                    <xsl:apply-templates select="timePrd"/>
-                </PVAL>
-            </PROP>
+    "PROP NAME="518"": "<xsl:text>Time Period: </xsl:text>
+                    <xsl:apply-templates select="timePrd"/>",
             <!-- time period facet -->
-    "PROP NAME="650y""
-                <PVAL>
-                    <xsl:apply-templates select="timePrd"/>
-                </PVAL>
-            </PROP>
+    "PROP NAME="650y"": "<xsl:apply-templates select="timePrd"/>",
         </xsl:if>
 <!--        <xsl:if test="collDate">
             <PROP NAME="650y">
@@ -534,9 +439,7 @@
         </xsl:if>-->
         <xsl:if test="dataKind">
             <!-- Source of data note -->
-    "PROP NAME="567""
-                <PVAL>
-                    <xsl:text>Data Source: </xsl:text>
+    "PROP NAME="567"": "<xsl:text>Data Source: </xsl:text>
                     <xsl:for-each select="dataKind">
                         <xsl:variable name="count">
                             <xsl:number/>
@@ -549,8 +452,6 @@
                         <xsl:apply-templates/>
 
                     </xsl:for-each>
-                </PVAL>
-            </PROP>
         </xsl:if>
 
 
@@ -560,37 +461,21 @@
 
         <xsl:if test="geogCover">
             <!-- Indexed Note - Geographic coverage -->
-    "PROP NAME="522""
-                <PVAL>
-                    <xsl:text>Geographic Coverage: </xsl:text>
-                    <xsl:apply-templates select="geogCover" mode="property"/>
-                </PVAL>
-            </PROP>
+    "PROP NAME="522"": "<xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="geogCover" mode="property"/>",
         </xsl:if>
 
         <xsl:for-each select="geogCover">
             <!-- Region facet -->
-    "PROP NAME="600z""
-                <PVAL>
-                    <xsl:apply-templates/>
-                </PVAL>
-            </PROP>
+    "PROP NAME="600z"": "<xsl:apply-templates/>
 
         </xsl:for-each>
 
-        <xsl:if test="geogUnit">
+        <xsl:if test="geogUnit">",
             <!-- Indexed Note - Geographic unit -->
-    "PROP NAME="522""
-                <PVAL>
-                    <xsl:text>Geographic Unit(s): </xsl:text>
+    "PROP NAME="522"": "<xsl:text>Geographic Unit(s): </xsl:text>
                     <xsl:apply-templates select="geogUnit" mode="property"/>
-                </PVAL>
-            </PROP>
         </xsl:if>
-
         <!-- xsl:apply-templates select="geoBndBox"/-->
-
-
         <!-- xsl:apply-templates select="anlyUnit"/-->
         <xsl:apply-templates select="universe"/>
         <!-- xsl:apply-templates select="dataKind"/-->
@@ -642,17 +527,11 @@
             <xsl:when test="@event='single'">
                 <xsl:if test="@date">
                     <!-- Collection date, feed to pubdate for sorting and faceting -->
-    "PROP NAME="008PubDate""
-                        <PVAL>
-                            <xsl:variable name="collDate">
+    "PROP NAME="008PubDate"": "<xsl:variable name="collDate">
                                 <xsl:value-of select="@date"/>
                             </xsl:variable>
 
-                            <xsl:value-of select="substring ($collDate, 1, 4)"/>
-
-
-                        </PVAL>
-                    </PROP>
+                            <xsl:value-of select="substring ($collDate, 1, 4)"/>",
 
                 </xsl:if>
             </xsl:when>
@@ -734,12 +613,9 @@
     <xsl:template match="universe">
         <!-- Universe -->
     "PROP NAME="567""
-            <PVAL>
                 <xsl:text>Universe: </xsl:text>
                 <xsl:apply-templates/>
 
-            </PVAL>
-        </PROP>
 
     </xsl:template>
     <!--xsl:template match="dataKind">
@@ -835,11 +711,8 @@
     <!-- Collection Mode -->
     <xsl:template match="collMode">
     "PROP NAME="567""
-        <PVAL>
         <xsl:text>Data Source: </xsl:text>
         <xsl:apply-templates/>
-        </PVAL>
-        </PROP>
         
     </xsl:template>
     <!--    <xsl:template match="resInstru">
@@ -867,11 +740,8 @@
     <xsl:template match="dataSrc">
         <!-- Data source -->
     "PROP NAME="567""
-            <PVAL>
                 <xsl:text>Data Source: </xsl:text>
                 <xsl:apply-templates/>
-            </PVAL>
-        </PROP>
     </xsl:template>
     <!--
     <xsl:template match="srcOrig">
@@ -1206,10 +1076,7 @@
     <xsl:template match="conditions">
         <!-- Access Restrictions -->
     "PROP NAME="506""
-            <PVAL>
                 <xsl:apply-templates select="p"/>
-            </PVAL>
-        </PROP>
     </xsl:template>
     <xsl:template match="disclaimer">
         <tr>
@@ -1387,10 +1254,8 @@
 
         <xsl:for-each select="fileType">
     "PROP NAME="Notes""
-                <PVAL>Type of File: <xsl:text> </xsl:text>
+                Type of File: <xsl:text> </xsl:text>
                     <xsl:value-of select="normalize-space(.)"/>
-                </PVAL>
-            </PROP>
         </xsl:for-each>
 
 
@@ -2534,23 +2399,16 @@
     <xsl:template match="notes" mode="contents">
         <!-- Contents -->
     "PROP NAME="500""
-            <PVAL>
                 <xsl:text>Contents: </xsl:text>
                 <xsl:value-of select="$fileCount"/>
                 <xsl:text> data file</xsl:text>
                 <xsl:if test="$fileCount&gt;1">
                     <xsl:text>s</xsl:text>
                 </xsl:if>               
-                
-            </PVAL>
-        </PROP>
     "PROP NAME="500""
-            <PVAL>
                 <xsl:text>Contents: </xsl:text>
                 
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>
     </xsl:template>
 
     <xsl:template match="Link"> &#160;(<a href="#{@refs}">link</a>) </xsl:template>
@@ -2559,14 +2417,11 @@
 
     <xsl:template match="ExtLink" mode="author">
     "PROP NAME="Other Authors""
-            <PVAL>
                 <xsl:value-of select="normalize-space($prodplace)"/>
                 <xsl:text> </xsl:text>
                 <xsl:value-of select="normalize-space($producer)"/>
                 <xsl:text> </xsl:text>
                 <xsl:value-of select="substring ($proddate, 1, 4)"/>
-            </PVAL>
-        </PROP>
     </xsl:template>
 
     <xsl:template match="p">
