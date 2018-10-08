@@ -61,7 +61,7 @@
     <xsl:variable name="producer">
         <xsl:value-of select="codeBook/docDscr[1]/citation[1]/prodStmt[1]/producer[1]"/>
     </xsl:variable>
-    <xsl:variable name="prodplace"> Ann Arbor, MI: </xsl:variable>
+    <xsl:variable name="prodplace"> Ann Arbor, MI : </xsl:variable>
     <xsl:variable name="proddate">
         <xsl:value-of select="codeBook/stdyDscr[1]/citation[1]/distStmt[1]/distDate[1]"/>
     </xsl:variable>
@@ -90,11 +90,12 @@
             "value": "ICPSR ed."
         }
     ],
-    "PROP NAME="260"": "<xsl:value-of select="normalize-space($prodplace)"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space($producer)"/><xsl:text> </xsl:text><xsl:value-of select="substring ($proddate, 1, 4)"/>"
-    "PROP NAME="260b"": "<xsl:value-of select="normalize-space($producer)"/>",
-    "PROP NAME="260c"": "<xsl:value-of select="substring ($proddate, 1, 4)"/>",
-    "PROP NAME="700a"": "<xsl:value-of select="normalize-space($producer)"/>",
-    "PROP NAME="100_Facet"": "<xsl:value-of select="normalize-space($producer)"/>",
+    "imprint_main":[
+        "{\"type\":\"imprint\",\"value\":\"<xsl:value-of select="normalize-space($prodplace)"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space($producer)"/><xsl:text>, </xsl:text><xsl:value-of select="substring ($proddate, 1, 4)"/>.\"}"
+    ],
+    "publisher": [
+        "<xsl:value-of select="normalize-space($producer)"/>"
+    ],
     "language": [
         "English"
     ],
@@ -152,17 +153,12 @@
         {
             "value": "<xsl:text>by </xsl:text><xsl:value-of select="$Authors"/>"
         }
-    ],<xsl:for-each select="AuthEnty">
-    "PROP NAME="700a"": "<xsl:value-of select="normalize-space(.)"/>",
-    "PROP NAME="100_Facet"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:for-each></xsl:template>
-
-    <xsl:template match="AuthEnty">
-    "PROP NAME="700a"": "<xsl:value-of select="normalize-space(.)"/><xsl:if test="@affiliation"> (<xsl:value-of select="@affiliation"/>)</xsl:if>",
-    </xsl:template>
-
-    <xsl:template match="othId">
-    "PROP NAME="Other Author"": "<xsl:value-of select="normalize-space(.)"/>",
-    </xsl:template>
+    ],
+    "names": [<xsl:for-each select="AuthEnty|othId|../../../docDscr/citation/prodStmt/producer">
+        {
+        "<xsl:value-of select="normalize-space(.)"/>"
+        }</xsl:for-each>     
+    ],</xsl:template>
 
     <xsl:template match="prodStmt">
     </xsl:template>
@@ -206,8 +202,12 @@
         <xsl:variable name="distDate">
             <xsl:apply-templates/>
         </xsl:variable>
-    "PROP NAME="008PubDate"": "<xsl:value-of select="substring ($distDate, 1, 4)"/>",
-    "PROP NAME="909"": "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>",</xsl:template>
+    "publication_year": [
+        <xsl:value-of select="substring ($distDate, 1, 4)"/>
+    ],
+    "date_cataloged": [
+        "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>"
+    ],</xsl:template>
     <xsl:template match="serStmt">
         <xsl:apply-templates select="serName"/>
         <xsl:apply-templates select="serInfo"/>
@@ -278,44 +278,28 @@
 
     <xsl:template match="subject" mode="subject_headings">
     "subject_headings": [<xsl:for-each select="(keyword|topcClas)">
-            <xsl:apply-templates select="(.)" mode="topic"></xsl:apply-templates>
+            <xsl:apply-templates select="(.)" mode="heading"></xsl:apply-templates>
             <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
     ]</xsl:template>
     
-    <xsl:template match="keyword" mode="heading">
-
+    <xsl:template match="keyword|topcClas" mode="heading">
         <xsl:variable name="subject">
-            
             <xsl:value-of select="normalize-space(.)"/>
         </xsl:variable>
-    "PROP NAME="600a"": "<xsl:value-of
+        {
+            "value":"<xsl:value-of
             select="concat(translate(substring($subject,
             1,1),'abcdefghijklmnopqrstuvwxyz',
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
-        />",</xsl:template>
-    
-    <xsl:template match="topcClas" mode="heading">
-    "PROP NAME="600a"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"/>"
+        }</xsl:template>
+
 
     <xsl:template match="abstract">
-        <xsl:variable name="count">
-            <xsl:number/>
-        </xsl:variable>
-    "PROP NAME="520"": "<xsl:text>seq</xsl:text>
-                <xsl:choose>
-                    <xsl:when test="$count&lt;10">
-                        <xsl:text>00</xsl:text>
-                        <xsl:value-of select="$count"/>
-                        <xsl:text>|</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>0</xsl:text>
-                        <xsl:value-of select="$count"/>
-                        <xsl:text>|</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
-                <xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+    "note_summary": [
+        "<xsl:value-of select="normalize-space(.)"/>"
+    ],</xsl:template>
+    
 
     <xsl:template match="sumDscr">
         <xsl:if test="timePrd">
@@ -343,8 +327,9 @@
         <xsl:if test="geogCover">
     "PROP NAME="522"": "<xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="geogCover" mode="property"/>",</xsl:if>
         <xsl:for-each select="geogCover">
-    "PROP NAME="600z"": "<xsl:apply-templates/>
-        </xsl:for-each>
+    "subject_geographic":[
+        "<xsl:apply-templates/>"
+    ]</xsl:for-each>
         <xsl:if test="geogUnit">",
     "PROP NAME="522"": "<xsl:text>Geographic Unit(s): </xsl:text>
             <xsl:apply-templates select="geogUnit" mode="property"/>
