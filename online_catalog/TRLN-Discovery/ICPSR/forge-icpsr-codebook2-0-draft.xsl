@@ -2,14 +2,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:unc="http://yourdomain.com/lookup" extension-element-prefixes="unc" version="1.0">
     <xsl:output method="text" indent="no"/>
-
+    <xsl:strip-space elements="*"/>
     <xsl:param name="part"/>
 
     <xsl:param name="var-token"/>
 
     <xsl:param name="varGrp-token"/>
 
-    <!-- define variables for later use -->
     
     <xsl:variable name="ICPSR-raw-id">
         <xsl:value-of select="codeBook/docDscr[1]/citation[1]/titlStmt[1]/IDNo[1]"/>
@@ -74,47 +73,32 @@
     <xsl:variable name="fileCount">
         <xsl:value-of select="count(codeBook/fileDscr)" />
     </xsl:variable>
-
+    
+    
     <xsl:template match="codeBook">{
-<!-- identifiers -->                        
-	"PROP NAME="UniqueId"": "<xsl:text>ICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
-    "PROP NAME="Rollup"": "<xsl:text>ICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",                 
-<!-- Dimension values -->
-    "PROP NAME="Source"": "ICPSR",
-<!-- Electronic Access -->
+    "id": "<xsl:text>UNCICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
+    "rollup_id": "<xsl:text>ICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
+    "record_data_source": [
+        "ICPSR"
+    ],
     "PROP NAME="Primary_URL"": "<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/><xsl:text>|</xsl:text><xsl:text>Access restricted ; authentication may be required.</xsl:text>",
-<!-- Help links for the ICPSR institutions -->
     "PROP NAME="Secondary_URL"": "<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for Duke users</xsl:text>",
     "PROP NAME="Secondary_URL"": "<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for NCSU users</xsl:text>",
-	"PROP NAME="Secondary_URL"": "<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for UNC users</xsl:text>",
-<!--xsl:apply-templates select="docDscr"/-->
-<!-- applying templates to generate the remainder of the content -->
-                    <xsl:apply-templates select="stdyDscr"/>
-                    <xsl:apply-templates select="fileDscr"/>
-                    <xsl:apply-templates select="dataDscr"/>
-                    <!--xsl:apply-templates select="otherMat"/-->
-                    <!-- variable driven and static properties and facets-->
-                    <!-- Edition -->
-    "PROP NAME="250"": "ICPSR ed.", 
-                    <!--Imprint-->
+	"PROP NAME="Secondary_URL"": "<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for UNC users</xsl:text>",<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
+    "edition": [
+        {
+            "value": "ICPSR ed."
+        }
+    ],
     "PROP NAME="260"": "<xsl:value-of select="normalize-space($prodplace)"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space($producer)"/><xsl:text> </xsl:text><xsl:value-of select="substring ($proddate, 1, 4)"/>"
-                    <!-- Publisher -->
     "PROP NAME="260b"": "<xsl:value-of select="normalize-space($producer)"/>",
-                    <!-- Publisher -->
     "PROP NAME="260c"": "<xsl:value-of select="substring ($proddate, 1, 4)"/>",
-                    <!-- Other Authors -->
     "PROP NAME="700a"": "<xsl:value-of select="normalize-space($producer)"/>",
-                    <!-- Author Facet -->
     "PROP NAME="100_Facet"": "<xsl:value-of select="normalize-space($producer)"/>",
-                    <!-- Language Facet -->
-    "PROP NAME="008Lang"": "eng"
+    "language": [
+        "English"
+    ],
 }</xsl:template>
-
-
-
-
-
-    <!-- begin docDscr templates -->
 
     <xsl:template match="docDscr">
         <xsl:apply-templates select="citation"/>
@@ -123,7 +107,6 @@
         <xsl:apply-templates select="docSrc"/>
         <xsl:apply-templates select="notes" mode="row"/>
     </xsl:template>
-
     <xsl:template match="citation">
         <xsl:apply-templates select="titlStmt"/>
         <xsl:apply-templates select="rspStmt"/>
@@ -133,23 +116,17 @@
         <xsl:apply-templates select="verStmt"/>
         <xsl:apply-templates select="biblCit"/>
         <xsl:apply-templates select="holdings"/>
-        <!--xsl:apply-templates select="notes" mode="row" /-->
     </xsl:template>
-
     <xsl:template match="titlStmt">
         <xsl:apply-templates select="titl"/>
-        <!--        <xsl:apply-templates select="subTitl"/>
-        <xsl:apply-templates select="altTitl"/>
-        <xsl:apply-templates select="parTitl"/>
-        <xsl:apply-templates select="IDNo"/>-->
     </xsl:template>
-
     <xsl:template match="titl">
-        <!-- Main Title -->
-    "PROP NAME="245"": "<xsl:value-of select="normalize-space(.)"/>",
-        <!-- Title Sort -->
-    "PROP NAME="245sort"": "<xsl:value-of select="normalize-space(.)"/>"
-    </xsl:template>
+    "title_main": [
+        {
+            "value": "<xsl:value-of select="normalize-space(.)"/>"
+        }
+    ],
+    "title_sort": "<xsl:value-of select="normalize-space(.)"/>"</xsl:template>
 
     <xsl:template match="subTitl"> </xsl:template>
 
@@ -160,9 +137,7 @@
     <xsl:template match="IDNo"> </xsl:template>
 
     <xsl:template match="rspStmt">
-
         <xsl:variable name="Authors">
-
             <xsl:for-each select="AuthEnty">
                 <xsl:apply-templates/>
                 <xsl:if test="position()!=last()">
@@ -173,20 +148,13 @@
                 </xsl:if>
             </xsl:for-each>
         </xsl:variable>
-
-
-        <!-- Statement of Responsibility -->
-    "PROP NAME="245c"": "<xsl:value-of select="$Authors"/>",
-        <xsl:for-each select="AuthEnty">
-            <!-- Other Authors Property -->
+    "statement_of_responsibility": [
+        {
+            "value": "<xsl:text>by </xsl:text><xsl:value-of select="$Authors"/>"
+        }
+    ],<xsl:for-each select="AuthEnty">
     "PROP NAME="700a"": "<xsl:value-of select="normalize-space(.)"/>",
-            <!-- Author Facet -->
-    "PROP NAME="100_Facet"": "<xsl:value-of select="normalize-space(.)"/>",
-        </xsl:for-each>
-
-        <!--xsl:apply-templates select="AuthEnty"/-->
-        <!--xsl:apply-templates select="othId"/-->
-    </xsl:template>
+    "PROP NAME="100_Facet"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:for-each></xsl:template>
 
     <xsl:template match="AuthEnty">
     "PROP NAME="700a"": "<xsl:value-of select="normalize-space(.)"/><xsl:if test="@affiliation"> (<xsl:value-of select="@affiliation"/>)</xsl:if>",
@@ -196,18 +164,7 @@
     "PROP NAME="Other Author"": "<xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
 
-
-
     <xsl:template match="prodStmt">
-        <!-- xsl:apply-templates select="producer"/ -->
-        <!--xsl:apply-templates select="copyright"/-->
-        <!-- xsl:apply-templates select="prodDate"/-->
-        <!-- xsl:apply-templates select="prodPlace"/-->
-        <!--xsl:apply-templates select="software" mode="row"/-->
-        <!--xsl:apply-templates select="fundAg"/-->
-        <!--xsl:apply-templates select="grantNo"/-->
-        <!--xsl:apply-templates select="published"/-->
-
     </xsl:template>
 
     <xsl:template match="producer">
@@ -218,10 +175,6 @@
     <xsl:template match="copyright">
     "PROP NAME="Notes"": "Copyright - <xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
-
-
-
-
 
     <xsl:template match="software">
     "PROP NAME="Notes"": "<xsl:text>Software used: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
@@ -234,10 +187,6 @@
     "PROP NAME="Notes"": "<xsl:text>Grant Number: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
     <xsl:template match="distStmt">
-        <!--xsl:apply-templates select="distrbtr"/-->
-        <!--xsl:apply-templates select="contact"/-->
-        <!--xsl:apply-templates select="depositr"/-->
-        <!--xsl:apply-templates select="depDate"/-->
         <xsl:apply-templates select="distDate"/>
     </xsl:template>
     <xsl:template match="distrbtr">
@@ -252,36 +201,22 @@
     <xsl:template match="depDate">
     "PROP NAME="Notes"": "<xsl:text>Deposited: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
-
+    
     <xsl:template match="distDate">
         <xsl:variable name="distDate">
             <xsl:apply-templates/>
         </xsl:variable>
-
-        <!-- PubDateSort property and Publication Year Facet-->
     "PROP NAME="008PubDate"": "<xsl:value-of select="substring ($distDate, 1, 4)"/>",
-        <!--        <PROP NAME="Publication Year">
-            <PVAL>
-                <xsl:value-of select="substring ($distDate, 1, 4)"/>
-            </PVAL>
-            </PROP>-->
-        <!-- DateCataloged -->
-    "PROP NAME="909"": "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>",
-    </xsl:template>
+    "PROP NAME="909"": "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>",</xsl:template>
     <xsl:template match="serStmt">
         <xsl:apply-templates select="serName"/>
         <xsl:apply-templates select="serInfo"/>
     </xsl:template>
     <xsl:template match="serName">
-        <!-- Series Statement -->
     "PROP NAME="440"": "<xsl:value-of select="normalize-space(.)"/>",
-        <!-- Series -->
     "PROP NAME="800"": "<xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-        <!-- Series title index-->
     "PROP NAME="800t"": "<xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-        <!-- Series -->
     "PROP NAME="800"": "<xsl:text>ICPSR </xsl:text><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-        <!-- Series title index-->
     "PROP NAME="800t"": "<xsl:text>ICPSR </xsl:text><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
     </xsl:template>
 
@@ -289,15 +224,11 @@
     <xsl:template match="verStmt">
         <xsl:if test="position()=last()">
             <xsl:apply-templates select="version"/>
-            <!-- xsl:apply-templates select="verResp" mode="row" /-->
-            <!-- xsl:apply-templates select="notes" mode="row" /-->
         </xsl:if>
     </xsl:template>
     <xsl:template match="version">
         <xsl:if test="@date">
-            <!-- Indexed Notes -->
-    "PROP NAME="500"": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>",
-        </xsl:if></xsl:template>
+    "PROP NAME="500"": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>",</xsl:if></xsl:template>
     <xsl:template match="verResp" mode="row">
     "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
@@ -312,100 +243,65 @@
     <xsl:template match="docSrc"> </xsl:template>
 
 
-    <!-- end docDscr templates -->
-
-    <!-- begin stdyDscr templates -->
-
     <xsl:template match="stdyDscr">
 
         <xsl:apply-templates select="citation"/>
         <xsl:apply-templates select="stdyInfo"/>
         <xsl:apply-templates select="method"/>
         <xsl:apply-templates select="dataAccs"/>
-        <!--xsl:apply-templates select="othrStdyMat"/-->
-        <!--xsl:apply-templates select="notes" mode="row" /-->
-
-
-
     </xsl:template>
 
     <xsl:template match="stdyInfo">
-        <xsl:apply-templates select="subject"/>
+        <xsl:apply-templates select="subject" mode="subject_topical"/>
+        <xsl:apply-templates select="subject" mode="subject_headings"/>
         <xsl:apply-templates select="abstract"/>
         <xsl:apply-templates select="sumDscr"/>
         <xsl:apply-templates select="notes" mode="row"/>
     </xsl:template>
 
-    <xsl:template match="subject">
-        <xsl:apply-templates select="keyword"/>
-        <xsl:apply-templates select="topcClas"/>
-    </xsl:template>
+    <xsl:template match="subject" mode="subject_topical">
+    "subject_topical": [<xsl:for-each select="(keyword|topcClas)">
+            <xsl:apply-templates select="(.)" mode="topic"></xsl:apply-templates>
+            <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+    ]</xsl:template>
 
-    <xsl:template match="keyword">
-        <!-- need to insert seq00n| for each keyword -->
-        <xsl:variable name="count">
-            <xsl:number/>
-        </xsl:variable>
+    <xsl:template match="keyword|topcClas" mode="topic">
         <xsl:variable name="subject">
+            <xsl:value-of select="normalize-space()"/>
+        </xsl:variable>
+        "<xsl:value-of
+            select="concat(translate(substring($subject,
+            1,1),'abcdefghijklmnopqrstuvwxyz',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
+        />"</xsl:template>
 
+    <xsl:template match="subject" mode="subject_headings">
+    "subject_headings": [<xsl:for-each select="(keyword|topcClas)">
+            <xsl:apply-templates select="(.)" mode="topic"></xsl:apply-templates>
+            <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+    ]</xsl:template>
+    
+    <xsl:template match="keyword" mode="heading">
+
+        <xsl:variable name="subject">
+            
             <xsl:value-of select="normalize-space(.)"/>
         </xsl:variable>
-        <!-- Subject facet -->
     "PROP NAME="600a"": "<xsl:value-of
-                    select="concat(translate(substring($subject,
-                1,1),'abcdefghijklmnopqrstuvwxyz',
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
-                />",
-        <!-- Subjects property and Subject Headings Facet-->
-    "PROP NAME="600"": "<xsl:text>seq</xsl:text>
-                <xsl:choose>
-                    <xsl:when test="$count&lt;10">
-                        <xsl:text>00</xsl:text>
-                        <xsl:value-of select="$count"/>
-                        <xsl:text>|</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>0</xsl:text>
-                        <xsl:value-of select="$count"/>
-                        <xsl:text>|</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
-                <xsl:value-of
-                    select="concat(translate(substring($subject,
-                    1,1),'abcdefghijklmnopqrstuvwxyz',
-                    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
-                />",
-        <!-- Subject Headings Facet -->
-<!--        <PROP NAME="Subject Headings">
-            <PVAL>
-                <xsl:value-of
-                    select="concat(translate(substring($subject,
-                1,1),'abcdefghijklmnopqrstuvwxyz',
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
-                />
-            </PVAL>
-        </PROP>-->
-    </xsl:template>
-
-    <xsl:template match="topcClas">
-        <!-- need to insert seq00n| for each keyword -->
-        <!-- Subject Facet -->
-    "PROP NAME="600a"": "<xsl:value-of select="normalize-space(.)"/>",
-<!--        <PROP NAME="Subject Heading">
-            <PVAL>
-                <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
-        </PROP>-->
-        <!-- Subjects property and subject headings facet -->
-    "PROP NAME="600"": "<xsl:value-of select="normalize-space(.)"/>",
-    </xsl:template>
-
+            select="concat(translate(substring($subject,
+            1,1),'abcdefghijklmnopqrstuvwxyz',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),substring($subject,2,string-length($subject)))"
+        />",</xsl:template>
+    
+    <xsl:template match="topcClas" mode="heading">
+    "PROP NAME="600a"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
     <xsl:template match="abstract">
         <xsl:variable name="count">
             <xsl:number/>
         </xsl:variable>
-        <!-- Summary -->
     "PROP NAME="520"": "<xsl:text>seq</xsl:text>
                 <xsl:choose>
                     <xsl:when test="$count&lt;10">
@@ -419,26 +315,15 @@
                         <xsl:text>|</xsl:text>
                     </xsl:otherwise>
                 </xsl:choose>
-                <xsl:value-of select="normalize-space(.)"/>",
-    </xsl:template>
+                <xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
     <xsl:template match="sumDscr">
         <xsl:if test="timePrd">
-            <!-- Note -->
     "PROP NAME="518"": "<xsl:text>Time Period: </xsl:text>
                     <xsl:apply-templates select="timePrd"/>",
-            <!-- time period facet -->
     "PROP NAME="650y"": "<xsl:apply-templates select="timePrd"/>",
         </xsl:if>
-<!--        <xsl:if test="collDate">
-            <PROP NAME="650y">
-                <PVAL>
-                    <xsl:apply-templates select="collDate"/>
-                </PVAL>
-            </PROP>          
-        </xsl:if>-->
         <xsl:if test="dataKind">
-            <!-- Source of data note -->
     "PROP NAME="567"": "<xsl:text>Data Source: </xsl:text>
                     <xsl:for-each select="dataKind">
                         <xsl:variable name="count">
@@ -455,30 +340,16 @@
         </xsl:if>
 
 
-        <!--<xsl:if test="nation"> </xsl:if>-->
-
-
-
         <xsl:if test="geogCover">
-            <!-- Indexed Note - Geographic coverage -->
-    "PROP NAME="522"": "<xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="geogCover" mode="property"/>",
-        </xsl:if>
-
+    "PROP NAME="522"": "<xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="geogCover" mode="property"/>",</xsl:if>
         <xsl:for-each select="geogCover">
-            <!-- Region facet -->
     "PROP NAME="600z"": "<xsl:apply-templates/>
-
         </xsl:for-each>
-
         <xsl:if test="geogUnit">",
-            <!-- Indexed Note - Geographic unit -->
     "PROP NAME="522"": "<xsl:text>Geographic Unit(s): </xsl:text>
-                    <xsl:apply-templates select="geogUnit" mode="property"/>
+            <xsl:apply-templates select="geogUnit" mode="property"/>
         </xsl:if>
-        <!-- xsl:apply-templates select="geoBndBox"/-->
-        <!-- xsl:apply-templates select="anlyUnit"/-->
         <xsl:apply-templates select="universe"/>
-        <!-- xsl:apply-templates select="dataKind"/-->
     </xsl:template>
 
     <xsl:template match="timePrd">
@@ -519,14 +390,8 @@
 
     <xsl:template match="collDate">
         <xsl:choose>
-            <!--            <xsl:when test="@event='start'">
-                <xsl:apply-templates/>-</xsl:when>
-            <xsl:when test="@event='end'">
-                <xsl:apply-templates/>
-            </xsl:when>-->
             <xsl:when test="@event='single'">
                 <xsl:if test="@date">
-                    <!-- Collection date, feed to pubdate for sorting and faceting -->
     "PROP NAME="008PubDate"": "<xsl:variable name="collDate">
                                 <xsl:value-of select="@date"/>
                             </xsl:variable>
@@ -535,16 +400,8 @@
 
                 </xsl:if>
             </xsl:when>
-            <!--            <xsl:otherwise>
-                <xsl:apply-templates/>
-            </xsl:otherwise>-->
         </xsl:choose>
     </xsl:template>
-
-    <!--xsl:template match="nation">
-                <xsl:apply-templates />
-        <xsl:if test="position()!=last()">, </xsl:if>
-    </xsl:template-->
 
     <xsl:template match="geogCover" mode="property">
         <xsl:apply-templates/>
@@ -562,512 +419,52 @@
 
     <xsl:template match="geoBndBox"> </xsl:template>
 
-    <!--xsl:template match="westBL">
-        <li><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-        West Bounding Longitude: <xsl:apply-templates /></li>
-    </xsl:template-->
-
-    <!--xsl:template match="eastBL">
-        <li><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-        East Bounding Longitude: <xsl:apply-templates /></li>
-    </xsl:template-->
-
-    <!--xsl:template match="southBL">
-        <li><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-        South Bounding Latitude: <xsl:apply-templates /></li>
-    </xsl:template-->
-
-    <!--xsl:template match="northBL">
-        <li><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-        North Bounding Latitude: <xsl:apply-templates /></li>
-    </xsl:template-->
-
-    <!--xsl:template match="boundPoly">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Geographic Bounding Polygon:</p>
-            </td>
-            <td>
-                 <xsl:apply-templates select="polygon" />
-            </td>
-        </tr>
-    </xsl:template-->
-
-
-    <!--xsl:template match="polygon">
-        <xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-        <ul>
-        <xsl:apply-templates select="point" />
-        </ul>
-    </xsl:template-->
-
-    <!--xsl:template match="point">
-        <li><xsl:if test="@ID"><a name="{@ID}" /></xsl:if><xsl:apply-templates select="gringLat" />; <xsl:apply-templates select="gringLon" /></li>
-    </xsl:template-->
-
     <xsl:template match="gringLat">G-Ring Latitude: <xsl:apply-templates/></xsl:template>
 
     <xsl:template match="gringLon">G-Ring Longitude: <xsl:apply-templates/></xsl:template>
 
     <xsl:template match="anlyUnit"> </xsl:template>
     <xsl:template match="universe">
-        <!-- Universe -->
     "PROP NAME="567"": "<xsl:text>Universe: </xsl:text><xsl:apply-templates/>",
     </xsl:template>
-    <!--xsl:template match="dataKind">
- 
-        
-    </xsl:template-->
-
     <xsl:template match="method">
 
         <xsl:apply-templates select="dataColl"/>
-        <!--<xsl:apply-templates select="notes" mode="row" />
-        <xsl:apply-templates select="anlyInfo"/>
-        <xsl:apply-templates select="stdyClas"/>-->
     </xsl:template>
 
     <xsl:template match="dataColl">
-        <!--<xsl:apply-templates select="timeMeth"/>
-        <xsl:apply-templates select="dataCollector"/>
-        <xsl:apply-templates select="frequenc"/>
-        <xsl:apply-templates select="sampProc"/>
-        <xsl:apply-templates select="deviat"/>
-        
-        <xsl:apply-templates select="resInstru"/>-->
         <xsl:apply-templates select="collMode"/>
         <xsl:apply-templates select="sources"/>
-        <!-- <xsl:apply-templates select="collSitu"/>
-        <xsl:apply-templates select="actMin"/>
-        <xsl:apply-templates select="ConOps"/>
-        <xsl:apply-templates select="weight"/>
-        <xsl:apply-templates select="cleanOps"/>-->
     </xsl:template>
 
-    <!--xsl:template match="timeMeth">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Time Method:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template -->
-    <!--xsl:template match="dataCollector">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <xsl:if test="position()=1"><p>Data Collector:</p></xsl:if>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template -->
-    <!--xsl:template match="frequenc">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Frequency of Data Collection:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template-->
-    <!--    <xsl:template match="sampProc">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <xsl:if test="position()=1"><p>Sampling Procedure:</p></xsl:if>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>-->
-    <!--    <xsl:template match="deviat">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Major Deviations from the Sample Design:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-        </xsl:template>-->
-    <!-- Collection Mode -->
     <xsl:template match="collMode">
     "PROP NAME="567"": "<xsl:text>Data Source: </xsl:text><xsl:apply-templates/>",
     </xsl:template>
-    <!--    <xsl:template match="resInstru">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Type of Research Instrument:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>-->
     <xsl:template match="sources">
 
         <xsl:apply-templates select="dataSrc"/>
-        <!--        <xsl:apply-templates select="srcOrig" />
-        <xsl:apply-templates select="srcChar" />
-        <xsl:apply-templates select="srcDocu" />
-        <xsl:apply-templates select="sources" />
--->
     </xsl:template>
 
     <xsl:template match="dataSrc">
-        <!-- Data source -->
     "PROP NAME="567"", "<xsl:text>Data Source: </xsl:text><xsl:apply-templates/>",
     </xsl:template>
-    <!--
-    <xsl:template match="srcOrig">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Origins of Sources:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="srcChar">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Characteristics of Source Notes:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="srcDocu">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Documentation and Access to Sources:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="collSitu">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Characteristics of Data Collection Situation:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="actMin">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Actions to Minimize Losses:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="ConOps">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Control Operations:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="weight">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Weighting:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="cleanOps">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Cleaning Operations:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
- 
- 
-    <xsl:template match="anlyInfo">
-        <xsl:apply-templates select="respRate"/>
-        <xsl:apply-templates select="EstSmpErr"/>
-        <xsl:apply-templates select="dataAppr"/>
-    </xsl:template>
-    <xsl:template match="respRate">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Response Rate:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="EstSmpErr">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Estimates of Sampling Error:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="dataAppr">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Other Forms of Data Appraisal:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="stdyClas">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Class of the Study:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    -->
     <xsl:template match="dataAccs">
 
         <xsl:apply-templates select="setAvail"/>
         <xsl:apply-templates select="useStmt"/>
-        <!--xsl:apply-templates select="notes" mode="row" /-->
-
-
     </xsl:template>
 
     <xsl:template match="setAvail">
-        <!--
-        <xsl:apply-templates select="accsPlac"/>
-        <xsl:apply-templates select="origArch"/>
-        <xsl:apply-templates select="avlStatus"/>
-        <xsl:apply-templates select="collSize"/>
-        <xsl:apply-templates select="complete"/>
-        <xsl:apply-templates select="fileQnty"/>
-        -->
         <xsl:apply-templates select="notes" mode="contents"/>
     </xsl:template>
-    <!--    
-    <xsl:template match="accsPlac">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Location:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="origArch">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Archive Where Study was Originally Stored:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="avlStatus">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Availability Status:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="collSize">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Extent of Collection:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="complete">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Completeness of Study Stored:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="fileQnty">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Number of Files:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>-->
-
     <xsl:template match="useStmt">
 
-        <!-- xsl:apply-templates select="confDec"/ -->
-        <!-- xsl:apply-templates select="specPerm"/ -->
-        <!-- xsl:apply-templates select="restrctn"/ -->
-        <!-- xsl:apply-templates select="contact"/ -->
-        <!-- xsl:apply-templates select="citReq"/ -->
-        <!-- xsl:apply-templates select="deposReq"/ -->
         <xsl:apply-templates select="conditions"/>
-        <!-- xsl:apply-templates select="disclaimer"/ -->
     </xsl:template>
-    <!--   <xsl:template match="confDec">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Confidentiality Declaration:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="specPerm">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Special Permissions:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="restrctn">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Restrictions:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="contact">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Access Authority:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="citReq">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Citation Requirement:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>
-    <xsl:template match="deposReq">
-        <tr>
-            <td class="h3"><xsl:if test="@ID"><a name="{@ID}" /></xsl:if>
-                <p>Deposit Requirement:</p>
-            </td>
-            <td>
-                <p>
-                    <xsl:apply-templates />
-                </p>
-            </td>
-        </tr>
-    </xsl:template>-->
     <xsl:template match="conditions">
-        <!-- Access Restrictions -->
-    "PROP NAME="506"": "<xsl:apply-templates select="p"/>
-    </xsl:template>
+    "note_access_restrictions": [
+        "<xsl:apply-templates select="p"/>"
+    ],</xsl:template>
     <xsl:template match="disclaimer">
         <tr>
             <td class="h3">
@@ -1211,18 +608,7 @@
 
     </xsl:template>
 
-    <!-- end stdyDscr templates -->
-
-    <!-- begin fileDscr templates -->
-
     <xsl:template match="fileDscr">
-
-
-
-        <!-- xsl:apply-templates select="fileTxt"/-->
-        <!-- <xsl:apply-templates select="locMap"/>
-        <xsl:apply-templates select="notes" mode="row"/>-->
-
 
     </xsl:template>
 
@@ -1238,30 +624,9 @@
     </xsl:template>
 
     <xsl:template match="fileTxt">
-        <!--                    <xsl:apply-templates select="fileCont"/>
-                    <xsl:apply-templates select="fileStrc"/>
-                    <xsl:apply-templates select="dimensns"/>-->
-
         <xsl:for-each select="fileType">
     "PROP NAME="Notes"": "Type of File: <xsl:text> </xsl:text><xsl:value-of select="normalize-space(.)"/>"
         </xsl:for-each>
-
-
-        <!--                    <xsl:apply-templates select="format"/>
-                    <xsl:apply-templates select="filePlac"/>
-                    <xsl:apply-templates select="dataChck"/>
-                    <xsl:apply-templates select="ProcStat"/>
-                    <xsl:apply-templates select="dataMsng"/>
-                    <xsl:apply-templates select="software" mode="list"/>
-                    <xsl:apply-templates select="verStmt" mode="list"/>
-
-
-                    <xsl:apply-templates select="notes" mode="list"/>-->
-
-
-        <!-- ADD: locMap -->
-
-
 
     </xsl:template>
     <xsl:template match="fileName"><xsl:if test="@ID">
@@ -1431,12 +796,6 @@
         </li>
     </xsl:template>
 
-    <!-- end fileDscr templates -->
-
-    <!-- begin dataDscr templates -->
-
-    <!-- ADD: nCubeGrp nCube -->
-
     <xsl:template match="dataDscr">
         <tr class="h1">
             <th colspan="2">
@@ -1570,15 +929,6 @@
                 <xsl:attribute name="href">#<xsl:value-of select="@ID"/></xsl:attribute>
                 <xsl:apply-templates mode="no-format" select="labl"/>
             </xsl:element>
-
-            <!--
-<xsl:element name="a">
-        <xsl:attribute name="href"><xsl:value-of select="$filename" />#<xsl:value-of select="@ID" /><xsl:if test="$part!=''">?part=<xsl:value-of select="$part" /></xsl:if>
-        </xsl:attribute>
-        <xsl:apply-templates mode="no-format" select="labl"/>
-        </xsl:element>
--->
-
         </li>
 
     </xsl:template>
@@ -1651,8 +1001,6 @@
         <xsl:apply-templates select="defntn"/>
         <xsl:apply-templates mode="row" select="universe"/>
         <xsl:apply-templates mode="row" select="notes"/>
-
-        <!-- What's this table for? Do tables normally appear in varGrp? -->
 
         <xsl:apply-templates select="table"/>
 
@@ -1864,8 +1212,6 @@
         </tr>
     </xsl:template>
     <xsl:template match="catgryGrp">
-
-        <!-- ADD: catStat -->
 
         <tr>
             <th align="left" colspan="4">
@@ -2240,11 +1586,6 @@
         </p>
     </xsl:template>
 
-    <!-- end dataDscr templates -->
-
-    <!-- begin otherMat templates -->
-
-
     <xsl:template match="otherMat">
         <tr>
             <th align="left" colspan="2">
@@ -2345,8 +1686,6 @@
         </td>
     </xsl:template>
 
-    <!-- end otherMat templates -->
-
     <xsl:template match="notes" mode="row">
         <tr>
             <td class="h3">
@@ -2385,11 +1724,9 @@
     </xsl:template>
 
     <xsl:template match="notes" mode="contents">
-        <!-- Contents -->
     "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="$fileCount"/><xsl:text> data file</xsl:text><xsl:if test="$fileCount&gt;1"><xsl:text>s</xsl:text>",
                 </xsl:if>               
-    "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
-    </xsl:template>
+    "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
     <xsl:template match="Link"> &#160;(<a href="#{@refs}">link</a>) </xsl:template>
 
@@ -2410,7 +1747,5 @@
             <xsl:apply-templates/>
         </em>
     </xsl:template>
-
-    <!-- ADD: div head hi item list -->
 
 </xsl:stylesheet>
