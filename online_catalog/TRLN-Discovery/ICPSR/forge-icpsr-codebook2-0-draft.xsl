@@ -81,10 +81,12 @@
     "record_data_source": [
         "ICPSR"
     ],
-    "PROP NAME="Primary_URL"": "<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/><xsl:text>|</xsl:text><xsl:text>Access restricted ; authentication may be required.</xsl:text>",
-    "PROP NAME="Secondary_URL"": "<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for Duke users</xsl:text>",
-    "PROP NAME="Secondary_URL"": "<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for NCSU users</xsl:text>",
-        "PROP NAME="Secondary_URL"": "<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for UNC users</xsl:text>",<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="allnotes"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
+    "url": [
+        "{\"href\":\"<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/>\",\"text\":\"<xsl:text>Access restricted ; authentication may be required.</xsl:text>\"}",
+        "{\"href\":\"<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/\</xsl:text>",<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
+        "{\"href\":\"<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
+        "{\"href\":\"<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for UNC users</xsl:text>\"}"
+    ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="allnotes"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
     "edition": [
         {
             "value": "ICPSR ed."
@@ -242,7 +244,7 @@
     </xsl:template>
     <xsl:template match="version">
         <xsl:if test="@date">
-        "value": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>",</xsl:if></xsl:template>
+        "value": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>"</xsl:if></xsl:template>
     <xsl:template match="verResp" mode="row">
     "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
@@ -449,7 +451,6 @@
     </xsl:template>
     <xsl:template match="dataAccs">
 
-        <xsl:apply-templates select="setAvail"/>
         <xsl:apply-templates select="useStmt"/>
     </xsl:template>
 
