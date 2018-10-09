@@ -84,7 +84,7 @@
     "PROP NAME="Primary_URL"": "<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/><xsl:text>|</xsl:text><xsl:text>Access restricted ; authentication may be required.</xsl:text>",
     "PROP NAME="Secondary_URL"": "<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for Duke users</xsl:text>",
     "PROP NAME="Secondary_URL"": "<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for NCSU users</xsl:text>",
-	"PROP NAME="Secondary_URL"": "<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for UNC users</xsl:text>",<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
+        "PROP NAME="Secondary_URL"": "<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text><xsl:text>|</xsl:text><xsl:text>ICPSR help for UNC users</xsl:text>",<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="allnotes"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
     "edition": [
         {
             "value": "ICPSR ed."
@@ -98,8 +98,17 @@
     ],
     "language": [
         "English"
-    ],
+    ]
 }</xsl:template>
+
+    <xsl:template match="stdyDscr" mode="allnotes">
+    "note_general":[<xsl:if test="dataAccs/setAvail/notes">
+            <xsl:apply-templates select="dataAccs/setAvail/notes" mode="contents"/>
+        </xsl:if>
+        <xsl:if test="citation/verStmt/version">
+            <xsl:apply-templates select="citation/verStmt/version"/>
+        </xsl:if>
+    ],</xsl:template>
 
     <xsl:template match="docDscr">
         <xsl:apply-templates select="citation"/>
@@ -114,7 +123,6 @@
         <xsl:apply-templates select="prodStmt"/>
         <xsl:apply-templates select="distStmt"/>
         <xsl:apply-templates select="serStmt"/>
-        <xsl:apply-templates select="verStmt"/>
         <xsl:apply-templates select="biblCit"/>
         <xsl:apply-templates select="holdings"/>
     </xsl:template>
@@ -155,8 +163,14 @@
         }
     ],
     "names": [<xsl:for-each select="AuthEnty|othId|../../../docDscr/citation/prodStmt/producer">
-        {
-        "<xsl:value-of select="normalize-space(.)"/>"
+        {<xsl:if test="self::producer">
+            "name": "<xsl:value-of select="normalize-space(.)"/>",
+            "type": "publisher",
+            "rel": "publisher"</xsl:if>
+        <xsl:if test="self::AuthEnty|othId">
+            "name": "<xsl:value-of select="normalize-space(.)"/>",
+            "type": "creator",
+            "rel": "creator"</xsl:if>
         }</xsl:for-each>     
     ],</xsl:template>
 
@@ -228,7 +242,7 @@
     </xsl:template>
     <xsl:template match="version">
         <xsl:if test="@date">
-    "PROP NAME="500"": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>",</xsl:if></xsl:template>
+        "value": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>",</xsl:if></xsl:template>
     <xsl:template match="verResp" mode="row">
     "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
@@ -439,9 +453,6 @@
         <xsl:apply-templates select="useStmt"/>
     </xsl:template>
 
-    <xsl:template match="setAvail">
-        <xsl:apply-templates select="notes" mode="contents"/>
-    </xsl:template>
     <xsl:template match="useStmt">
 
         <xsl:apply-templates select="conditions"/>
@@ -1709,9 +1720,8 @@
     </xsl:template>
 
     <xsl:template match="notes" mode="contents">
-    "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="$fileCount"/><xsl:text> data file</xsl:text><xsl:if test="$fileCount&gt;1"><xsl:text>s</xsl:text>",
-                </xsl:if>               
-    "PROP NAME="500"": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+        "value": "<xsl:text>Contents: </xsl:text><xsl:value-of select="$fileCount"/><xsl:text> data file</xsl:text><xsl:if test="$fileCount&gt;1"><xsl:text>s</xsl:text></xsl:if>",
+        "value": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
     <xsl:template match="Link"> &#160;(<a href="#{@refs}">link</a>) </xsl:template>
 
