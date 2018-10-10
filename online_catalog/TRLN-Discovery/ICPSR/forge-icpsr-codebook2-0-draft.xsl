@@ -86,7 +86,7 @@
         "{\"href\":\"<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/\</xsl:text>",<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
         "{\"href\":\"<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
         "{\"href\":\"<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for UNC users</xsl:text>\"}"
-    ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="generalnotes"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
+        ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="generalnotes"/><xsl:apply-templates select="stdyDscr" mode="notesmethod"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
     "edition": [
         {
             "value": "ICPSR ed."
@@ -111,9 +111,30 @@
         {
         "value": <xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="stdyInfo/sumDscr/geogCover" mode="property"/>"
         },</xsl:if>
-        <xsl:if test="citation/verStmt/version">
-            <xsl:apply-templates select="citation/verStmt/version"/></xsl:if>
+        <xsl:if test="citation/verStmt">
+            <xsl:apply-templates select="citation/verStmt"/></xsl:if>
     ],</xsl:template>
+    
+    <xsl:template match="stdyDscr" mode="notesmethod">
+        <xsl:if test="stdyInfo/sumDscr/dataKind">
+    "note_methodology":[ 
+        {
+            "value": "<xsl:text>Data Source: </xsl:text>
+            <xsl:for-each select="stdyInfo/sumDscr/dataKind">
+                <xsl:variable name="count">
+                    <xsl:number/>
+                </xsl:variable>
+                
+                <xsl:if test="$count&gt;1">
+                    <xsl:text>, </xsl:text>
+                </xsl:if>
+                
+                <xsl:apply-templates/>
+                
+            </xsl:for-each>"
+        }
+    ]</xsl:if>
+    </xsl:template>
 
     <xsl:template match="docDscr">
         <xsl:apply-templates select="citation"/>
@@ -122,15 +143,14 @@
         <xsl:apply-templates select="docSrc"/>
         <xsl:apply-templates select="notes" mode="row"/>
     </xsl:template>
+    
     <xsl:template match="citation">
         <xsl:apply-templates select="titlStmt"/>
         <xsl:apply-templates select="rspStmt"/>
-        <xsl:apply-templates select="prodStmt"/>
         <xsl:apply-templates select="distStmt"/>
         <xsl:apply-templates select="serStmt"/>
-        <xsl:apply-templates select="biblCit"/>
-        <xsl:apply-templates select="holdings"/>
     </xsl:template>
+    
     <xsl:template match="titlStmt">
         <xsl:apply-templates select="titl"/>
     </xsl:template>
@@ -141,14 +161,6 @@
         }
     ],
     "title_sort": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
-
-    <xsl:template match="subTitl"> </xsl:template>
-
-    <xsl:template match="altTitl"> </xsl:template>
-
-    <xsl:template match="parTitl"> </xsl:template>
-
-    <xsl:template match="IDNo"> </xsl:template>
 
     <xsl:template match="rspStmt">
         <xsl:variable name="Authors">
@@ -180,12 +192,10 @@
         }</xsl:for-each>     
     ],</xsl:template>
 
-    <xsl:template match="prodStmt">
-    </xsl:template>
-
     <xsl:template match="copyright">
     "PROP NAME="Notes"": "Copyright - <xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
+    
     <xsl:template match="software">
     "PROP NAME="Notes"": "<xsl:text>Software used: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
@@ -224,7 +234,6 @@
     
     <xsl:template match="serStmt">
         <xsl:apply-templates select="serName"/>
-        <xsl:apply-templates select="serInfo"/>
     </xsl:template>
     
     <xsl:template match="serName">
@@ -245,7 +254,6 @@
         }
     ],</xsl:template>
 
-    <xsl:template match="serInfo"> </xsl:template>
     <xsl:template match="verStmt">
         <xsl:if test="position()=last()">
             <xsl:apply-templates select="version"/>
@@ -261,10 +269,6 @@
     <xsl:template match="verResp" mode="row">
     "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
-    
-    <xsl:template match="biblCit"> </xsl:template>
-    
-    <xsl:template match="holdings"> </xsl:template>
     
     <xsl:template match="guide">
     "PROP NAME="Note"": "<xsl:text>Guide to Codebook: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
@@ -339,21 +343,6 @@
     "PROP NAME="518"": "<xsl:text>Time Period: </xsl:text>
                     <xsl:apply-templates select="timePrd"/>",
     "PROP NAME="650y"": "<xsl:apply-templates select="timePrd"/>",
-        </xsl:if>
-        <xsl:if test="dataKind">
-    "PROP NAME="567"": "<xsl:text>Data Source: </xsl:text>
-                    <xsl:for-each select="dataKind">
-                        <xsl:variable name="count">
-                            <xsl:number/>
-                        </xsl:variable>
-
-                        <xsl:if test="$count&gt;1">
-                            <xsl:text> </xsl:text>
-                        </xsl:if>
-                        
-                        <xsl:apply-templates/>
-
-                    </xsl:for-each>
         </xsl:if>
 
         <xsl:if test="geogCover">
