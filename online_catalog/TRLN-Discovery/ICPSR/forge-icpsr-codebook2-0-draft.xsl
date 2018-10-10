@@ -165,15 +165,19 @@
         }
     ],
     "names": [<xsl:for-each select="AuthEnty|othId|../../../docDscr/citation/prodStmt/producer">
-        {<xsl:if test="self::producer">
-            "name": "<xsl:value-of select="normalize-space(.)"/>",
-            "type": "publisher",
-            "rel": "publisher"</xsl:if>
         <xsl:if test="self::AuthEnty|othId">
+        {
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "creator",
-            "rel": "creator"</xsl:if>
-        }</xsl:for-each>     
+            "rel": "creator"
+        },</xsl:if>
+        <xsl:if test="self::producer">
+        {
+            "name": "<xsl:value-of select="normalize-space(.)"/>",
+            "type": "publisher",
+            "rel": "publisher"
+        },</xsl:if>
+        </xsl:for-each>     
     ],</xsl:template>
 
     <xsl:template match="prodStmt">

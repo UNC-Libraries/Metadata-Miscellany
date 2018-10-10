@@ -145,11 +145,10 @@
     "access_type": ["Online"],
     "institution": ["unc", "duke", "nccu", "ncsu"],
     "owner": "unc",
-    "available": "Available",
-    "record_data_source’:["Shared Records", "Dataverse"],
+    "record_data_source":["Shared Records", "Dataverse"],
     "virtual_collection":[
         "TRLN Shared Records. Odum Institute Dataverse."
-    ]
+    ],
     "language":[
         "English"
     ],</xsl:template>
@@ -243,8 +242,7 @@
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
-
-    </xsl:template>
+    "available": "Available"</xsl:template>
 
 
     <xsl:template name="Conditions">
@@ -257,11 +255,11 @@
 
         <xsl:choose>
             <xsl:when test="contains($allRights,'UNC faculty')">
-    "PROP NAME="Conditions"": "restrictedunc",</xsl:when>
+    "PROP NAME=Conditions": "restrictedunc",</xsl:when>
             <xsl:when test="contains($allRights,'Duke faculty')">
-    "PROP NAME="Conditions"": "restrictedduke",</xsl:when>
+    "PROP NAME=Conditions": "restrictedduke",</xsl:when>
             <xsl:otherwise>
-    "PROP NAME="Conditions">": "unrestricted",</xsl:otherwise>
+    "PROP NAME=Conditions": "unrestricted",</xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
@@ -338,15 +336,16 @@
         }
     ],</xsl:template>
 
-
     <xsl:template match="*[local-name()='rights']">
-    "PROP NAME="Rights"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+        <xsl:variable name="rights">
+            <xsl:call-template name="jsonescape"></xsl:call-template>
+        </xsl:variable>
+    "PROP NAME=Rights": "<xsl:value-of select="normalize-space($rights)"/>",</xsl:template>
 
 
     <xsl:template match="*[local-name()='identifier']" mode="qualifieddc">
         <xsl:param name="setSpec"/>
-    "PROP NAME="PrimaryURL": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
-
+    "PROP NAME=PrimaryURL": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
     <xsl:template match="*[local-name()='relation']"/>
 
@@ -387,7 +386,7 @@
                 </xsl:choose>
             </xsl:for-each>
         </xsl:variable>       
-    'imprint_main': [
+    "imprint_main": [
         "{\"type\": \"publication\",\"value\": \"<xsl:value-of select="normalize-space(.)"/>, <xsl:value-of select="$imprintDate"/>\"}"
     ],</xsl:template>
     
@@ -464,7 +463,7 @@
         <xsl:choose>
 
             <xsl:when test="starts-with($text,'Geographic Coverage')">
-    "PROP NAME="CoverageSpatial"": "<xsl:value-of select="normalize-space(.)"/>",</xsl:when>
+    "PROP NAME=CoverageSpatial": "<xsl:value-of select="normalize-space(.)"/>",</xsl:when>
 
             <xsl:when test="starts-with($text,'Time Period')">
 
@@ -482,7 +481,7 @@
                         <xsl:with-param name="by" select="$null"/>
                     </xsl:call-template>
                 </xsl:variable>
-    "PROP NAME="CoverageTemporal"": "<xsl:value-of select="normalize-space($Coverage)"/>",</xsl:when>
+    "PROP NAME=CoverageTemporal": "<xsl:value-of select="normalize-space($Coverage)"/>",</xsl:when>
 
             <xsl:when test="starts-with($text,'Country')">
 
@@ -513,19 +512,37 @@
     <xsl:template match="*[local-name()='description']">
         <xsl:variable name="setSpec"/>
         <xsl:variable name="cite" select="text()"/>
-
+        <xsl:variable name="description">
+            <xsl:call-template name="jsonescape"></xsl:call-template>
+        </xsl:variable>
         <xsl:choose>
             <!-- Filters out preferred citation elements into the note field -->
             <xsl:when test="starts-with($cite,'Citation')">
-    "PROP NAME="Notes"": "<xsl:value-of select="."/>",</xsl:when>
+    "PROP NAME=Notes": "<xsl:value-of select="normalize-space($description)"/>",</xsl:when>
 
             <xsl:otherwise>
     "note_summary":[
-        "<xsl:value-of select="."/>"
+        "<xsl:value-of select="$description"/>"
     ],</xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="jsonescape">
+        <xsl:param name="str" select="."/>
+        <xsl:param name="escapeChars" select="'\&quot;'" />
+        <xsl:variable name="first" select="substring(translate($str, translate($str, $escapeChars, ''), ''), 1, 1)" />
+        <xsl:choose>
+            <xsl:when test="$first">
+                <xsl:value-of select="concat(substring-before($str, $first), '\', $first)"/>
+                <xsl:call-template name="jsonescape">
+                    <xsl:with-param name="str" select="substring-after($str, $first)"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$str"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <xsl:template name="string-replace-all">
         <xsl:param name="text"/>
