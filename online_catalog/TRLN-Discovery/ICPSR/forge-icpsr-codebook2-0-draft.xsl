@@ -86,7 +86,7 @@
         "{\"href\":\"<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/\</xsl:text>",<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
         "{\"href\":\"<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
         "{\"href\":\"<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for UNC users</xsl:text>\"}"
-    ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="allnotes"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
+    ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="generalnotes"/><xsl:apply-templates select="fileDscr"/><xsl:apply-templates select="dataDscr"/>
     "edition": [
         {
             "value": "ICPSR ed."
@@ -103,13 +103,16 @@
     ]
 }</xsl:template>
 
-    <xsl:template match="stdyDscr" mode="allnotes">
+    <xsl:template match="stdyDscr" mode="generalnotes">
     "note_general":[<xsl:if test="dataAccs/setAvail/notes">
             <xsl:apply-templates select="dataAccs/setAvail/notes" mode="contents"/>
         </xsl:if>
+        <xsl:if test="stdyInfo/sumDscr/geogCover">
+        {
+        "value": <xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="stdyInfo/sumDscr/geogCover" mode="property"/>"
+        },</xsl:if>
         <xsl:if test="citation/verStmt/version">
-            <xsl:apply-templates select="citation/verStmt/version"/>
-        </xsl:if>
+            <xsl:apply-templates select="citation/verStmt/version"/></xsl:if>
     ],</xsl:template>
 
     <xsl:template match="docDscr">
@@ -137,7 +140,7 @@
             "value": "<xsl:value-of select="normalize-space(.)"/>"
         }
     ],
-    "title_sort": "<xsl:value-of select="normalize-space(.)"/>"</xsl:template>
+    "title_sort": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
     <xsl:template match="subTitl"> </xsl:template>
 
@@ -164,38 +167,28 @@
             "value": "<xsl:text>by </xsl:text><xsl:value-of select="$Authors"/>"
         }
     ],
-    "names": [<xsl:for-each select="AuthEnty|othId|../../../docDscr/citation/prodStmt/producer">
-        <xsl:if test="self::AuthEnty|othId">
+    "names": [<xsl:for-each select="AuthEnty|othId">
         {
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "creator",
             "rel": "creator"
-        },</xsl:if>
-        <xsl:if test="self::producer">
-        {
+        },</xsl:for-each>
+        {<xsl:for-each select="../../../docDscr/citation/prodStmt/producer">
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "publisher",
             "rel": "publisher"
-        },</xsl:if>
-        </xsl:for-each>     
+        }</xsl:for-each>     
     ],</xsl:template>
 
     <xsl:template match="prodStmt">
     </xsl:template>
 
-    <xsl:template match="producer">
-    "PROP NAME="Publisher"": "<xsl:value-of select="normalize-space(.)"/>",
-        <xsl:apply-templates select="ExtLink" mode="author"/>
-    </xsl:template>
-
     <xsl:template match="copyright">
     "PROP NAME="Notes"": "Copyright - <xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
-
     <xsl:template match="software">
     "PROP NAME="Notes"": "<xsl:text>Software used: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
-
     <xsl:template match="fundAg">
     "PROP NAME="Notes"": "<xsl:text>Funding Agency/Sponsor: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
@@ -248,7 +241,9 @@
     </xsl:template>
     <xsl:template match="version">
         <xsl:if test="@date">
-        "value": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>"</xsl:if></xsl:template>
+        {
+        "value": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>"
+        }</xsl:if></xsl:template>
     <xsl:template match="verResp" mode="row">
     "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
@@ -274,7 +269,9 @@
     <xsl:template match="stdyInfo">
         <xsl:apply-templates select="subject" mode="subject_topical"/>
         <xsl:apply-templates select="subject" mode="subject_headings"/>
-        <xsl:apply-templates select="abstract"/>
+    "note_summary": [<xsl:for-each select="abstract">
+        <xsl:apply-templates select="(.)"/><xsl:if test="position()!=last()">, </xsl:if></xsl:for-each>
+    ],
         <xsl:apply-templates select="sumDscr"/>
         <xsl:apply-templates select="notes" mode="row"/>
     </xsl:template>
@@ -284,7 +281,7 @@
             <xsl:apply-templates select="(.)" mode="topic"></xsl:apply-templates>
             <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
-    ]</xsl:template>
+    ],</xsl:template>
 
     <xsl:template match="keyword|topcClas" mode="topic">
         <xsl:variable name="subject">
@@ -301,7 +298,7 @@
             <xsl:apply-templates select="(.)" mode="heading"></xsl:apply-templates>
             <xsl:if test="position() != last()">,</xsl:if>
         </xsl:for-each>
-    ]</xsl:template>
+    ],</xsl:template>
     
     <xsl:template match="keyword|topcClas" mode="heading">
         <xsl:variable name="subject">
@@ -316,9 +313,10 @@
 
 
     <xsl:template match="abstract">
-    "note_summary": [
-        "<xsl:value-of select="normalize-space(.)"/>"
-    ],</xsl:template>
+        <xsl:variable name="abstract">
+            <xsl:call-template name="jsonescape"></xsl:call-template>
+        </xsl:variable>
+            "<xsl:value-of select="normalize-space($abstract)"/>"</xsl:template>
     
 
     <xsl:template match="sumDscr">
@@ -343,14 +341,14 @@
                     </xsl:for-each>
         </xsl:if>
 
-
         <xsl:if test="geogCover">
-    "PROP NAME="522"": "<xsl:text>Geographic Coverage: </xsl:text><xsl:apply-templates select="geogCover" mode="property"/>",</xsl:if>
         <xsl:for-each select="geogCover">
     "subject_geographic":[
         "<xsl:apply-templates/>"
-    ]</xsl:for-each>
-        <xsl:if test="geogUnit">",
+    ],</xsl:for-each>
+        </xsl:if>
+        
+        <xsl:if test="geogUnit">
     "PROP NAME="522"": "<xsl:text>Geographic Unit(s): </xsl:text>
             <xsl:apply-templates select="geogUnit" mode="property"/>
         </xsl:if>
@@ -1725,16 +1723,16 @@
     </xsl:template>
 
     <xsl:template match="notes" mode="contents">
-        "value": "<xsl:text>Contents: </xsl:text><xsl:value-of select="$fileCount"/><xsl:text> data file</xsl:text><xsl:if test="$fileCount&gt;1"><xsl:text>s</xsl:text></xsl:if>",
-        "value": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>",</xsl:template>
+        {
+        "value": "<xsl:text>Contents: </xsl:text><xsl:value-of select="$fileCount"/><xsl:text> data file</xsl:text><xsl:if test="$fileCount&gt;1"><xsl:text>s</xsl:text></xsl:if>"
+        },
+        {
+        "value": "<xsl:text>Contents: </xsl:text><xsl:value-of select="normalize-space(.)"/>"
+        },</xsl:template>
 
     <xsl:template match="Link"> &#160;(<a href="#{@refs}">link</a>) </xsl:template>
 
     <xsl:template match="ExtLink"> (<a href="{@URI}">external link</a>) </xsl:template>
-
-    <xsl:template match="ExtLink" mode="author">
-    "PROP NAME="Other Authors"": "<xsl:value-of select="normalize-space($prodplace)"/><xsl:text> </xsl:text><xsl:value-of select="normalize-space($producer)"/><xsl:text> </xsl:text><xsl:value-of select="substring ($proddate, 1, 4)"/>",
-    </xsl:template>
 
     <xsl:template match="p">
 
@@ -1747,5 +1745,22 @@
             <xsl:apply-templates/>
         </em>
     </xsl:template>
-
+    
+    <xsl:template name="jsonescape">
+        <xsl:param name="str" select="."/>
+        <xsl:param name="escapeChars" select="'\&quot;'" />
+        <xsl:variable name="first" select="substring(translate($str, translate($str, $escapeChars, ''), ''), 1, 1)" />
+        <xsl:choose>
+            <xsl:when test="$first">
+                <xsl:value-of select="concat(substring-before($str, $first), '\', $first)"/>
+                <xsl:call-template name="jsonescape">
+                    <xsl:with-param name="str" select="substring-after($str, $first)"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$str"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
 </xsl:stylesheet>
