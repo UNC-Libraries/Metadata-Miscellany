@@ -221,17 +221,29 @@
     "date_cataloged": [
         "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>"
     ],</xsl:template>
+    
     <xsl:template match="serStmt">
         <xsl:apply-templates select="serName"/>
         <xsl:apply-templates select="serInfo"/>
     </xsl:template>
+    
     <xsl:template match="serName">
-    "PROP NAME="440"": "<xsl:value-of select="normalize-space(.)"/>",
-    "PROP NAME="800"": "<xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-    "PROP NAME="800t"": "<xsl:value-of select="normalize-space(.)"/><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-    "PROP NAME="800"": "<xsl:text>ICPSR </xsl:text><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-    "PROP NAME="800t"": "<xsl:text>ICPSR </xsl:text><xsl:text> </xsl:text><xsl:value-of select="$ICPSR-id"/>",
-    </xsl:template>
+    "series_work": [
+        {
+            "title": [
+                "<xsl:value-of select="normalize-space(.)"/>"
+            ],
+            "details": "<xsl:value-of select="$ICPSR-id"/>",
+            "type": "series"
+        },
+        {
+            "title": [
+                "<xsl:text>ICPSR</xsl:text>"
+            ],
+            "details": "<xsl:value-of select="$ICPSR-id"/>",
+            "type": "series"
+        }
+    ],</xsl:template>
 
     <xsl:template match="serInfo"> </xsl:template>
     <xsl:template match="verStmt">
@@ -239,27 +251,30 @@
             <xsl:apply-templates select="version"/>
         </xsl:if>
     </xsl:template>
+    
     <xsl:template match="version">
         <xsl:if test="@date">
         {
         "value": "<xsl:text>Title from ICPSR DDI metadata of </xsl:text><xsl:value-of select="@date"/>"
         }</xsl:if></xsl:template>
+    
     <xsl:template match="verResp" mode="row">
     "PROP NAME="Version Responsibility:"": "<xsl:text>Version Responsibility: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
+    
     <xsl:template match="biblCit"> </xsl:template>
+    
     <xsl:template match="holdings"> </xsl:template>
+    
     <xsl:template match="guide">
     "PROP NAME="Note"": "<xsl:text>Guide to Codebook: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
+    
     <xsl:template match="docStatus"> </xsl:template>
-
 
     <xsl:template match="docSrc"> </xsl:template>
 
-
     <xsl:template match="stdyDscr">
-
         <xsl:apply-templates select="citation"/>
         <xsl:apply-templates select="stdyInfo"/>
         <xsl:apply-templates select="method"/>
@@ -316,7 +331,7 @@
         <xsl:variable name="abstract">
             <xsl:call-template name="jsonescape"></xsl:call-template>
         </xsl:variable>
-            "<xsl:value-of select="normalize-space($abstract)"/>"</xsl:template>
+        "<xsl:value-of select="normalize-space($abstract)"/>"</xsl:template>
     
 
     <xsl:template match="sumDscr">
