@@ -182,13 +182,12 @@
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='dc']" mode="generalnotes"/>
     </xsl:template>
 
 
     <xsl:template match="*[local-name()='dc']">
         <xsl:param name="setSpec"/>
-        
-        <xsl:call-template name="Conditions"/>
 
         <xsl:apply-templates select="*[local-name()='title']">
             <xsl:with-param name="setSpec">
@@ -197,16 +196,15 @@
         </xsl:apply-templates>
 
         <xsl:apply-templates select="*[local-name()='type']"/>
-
-        <xsl:apply-templates select="*[local-name()='creator']">
+    "names":[<xsl:for-each select="*[local-name()='creator']">
+        <xsl:apply-templates select="(.)">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
-
-        <xsl:apply-templates select="*[local-name()='rights']"/>
-
-        <xsl:apply-templates select="*[local-name()='identifier']" mode="qualifieddc">
+        <xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+    ],<xsl:apply-templates select="*[local-name()='identifier']" mode="qualifieddc">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
@@ -242,26 +240,10 @@
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
-    "available": "Available"</xsl:template>
+    "available": "Available",</xsl:template>
 
 
-    <xsl:template name="Conditions">
 
-        <xsl:variable name="allRights">
-            <xsl:for-each select="*[local-name()='rights']">
-                <xsl:value-of select="."/>
-            </xsl:for-each>
-        </xsl:variable>
-
-        <xsl:choose>
-            <xsl:when test="contains($allRights,'UNC faculty')">
-    "PROP NAME=Conditions": "restrictedunc",</xsl:when>
-            <xsl:when test="contains($allRights,'Duke faculty')">
-    "PROP NAME=Conditions": "restrictedduke",</xsl:when>
-            <xsl:otherwise>
-    "PROP NAME=Conditions": "unrestricted",</xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
 
 
     <xsl:template match="*[local-name()='title']">
@@ -328,25 +310,20 @@
 
     <xsl:template match="*[local-name()='creator']">
         <xsl:param name="setSpec"/>
-    "names":[
         {
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "creator",
             "rel": "creator"
-        }
-    ],</xsl:template>
+        }</xsl:template>
 
-    <xsl:template match="*[local-name()='rights']">
-        <xsl:variable name="rights">
-            <xsl:call-template name="jsonescape"></xsl:call-template>
-        </xsl:variable>
-    "PROP NAME=Rights": "<xsl:value-of select="normalize-space($rights)"/>",</xsl:template>
 
 
     <xsl:template match="*[local-name()='identifier']" mode="qualifieddc">
         <xsl:param name="setSpec"/>
-    "PROP NAME=PrimaryURL": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
-
+    "url": [
+        "{\"href\":\"<xsl:value-of select="normalize-space(.)"/>"}"
+    ],</xsl:template>
+    
     <xsl:template match="*[local-name()='relation']"/>
 
 
@@ -458,30 +435,9 @@
 
     <xsl:template match="*[local-name()='coverage']">
         <xsl:param name="setSpec"/>
-        <xsl:variable name="text" select="text()"/>
+        <xsl:variable name="text" select="normalize-space(text())"/>
 
         <xsl:choose>
-
-            <xsl:when test="starts-with($text,'Geographic Coverage')">
-    "PROP NAME=CoverageSpatial": "<xsl:value-of select="normalize-space(.)"/>",</xsl:when>
-
-            <xsl:when test="starts-with($text,'Time Period')">
-
-                <xsl:variable name="startText">
-                    <xsl:text>Time Period Covered: </xsl:text>
-                </xsl:variable>
-                <xsl:variable name="null">
-                    <xsl:text/>
-                </xsl:variable>
-
-                <xsl:variable name="Coverage">
-                    <xsl:call-template name="string-replace-all">
-                        <xsl:with-param name="text" select="$text"/>
-                        <xsl:with-param name="replace" select="$startText"/>
-                        <xsl:with-param name="by" select="$null"/>
-                    </xsl:call-template>
-                </xsl:variable>
-    "PROP NAME=CoverageTemporal": "<xsl:value-of select="normalize-space($Coverage)"/>",</xsl:when>
 
             <xsl:when test="starts-with($text,'Country')">
 
@@ -500,9 +456,6 @@
                     </xsl:call-template>
                 </xsl:variable>
     "PROP NAME="Spatial"": "<xsl:value-of select="normalize-space($Coverage)"/>",</xsl:when>
-            <xsl:otherwise>
-    "PROP NAME="Notes"": "<xsl:value-of select="normalize-space(.)"/>",
-            </xsl:otherwise>
 
         </xsl:choose>
 
@@ -517,16 +470,78 @@
         </xsl:variable>
         <xsl:choose>
             <!-- Filters out preferred citation elements into the note field -->
-            <xsl:when test="starts-with($cite,'Citation')">
-    "PROP NAME=Notes": "<xsl:value-of select="normalize-space($description)"/>",</xsl:when>
-
-            <xsl:otherwise>
+            <xsl:when test="not(starts-with($cite,'Citation'))">
     "note_summary":[
         "<xsl:value-of select="$description"/>"
-    ],</xsl:otherwise>
+    ],</xsl:when>
         </xsl:choose>
     </xsl:template>
 
+<!-- general notes -->
+    <xsl:template match="*[local-name()='dc']" mode="generalnotes">
+    "note_general":[<xsl:for-each select="*[local-name()='description']">
+            <xsl:variable name="cite" select="text()"/>
+            <xsl:variable name="description">
+                <xsl:call-template name="jsonescape"></xsl:call-template>
+            </xsl:variable>
+                <!-- Filters out preferred citation elements into the note field -->
+                <xsl:if test="starts-with($cite,'Citation')">
+        {
+            "value": "<xsl:value-of select="normalize-space($description)"/>"
+        },</xsl:if>
+        </xsl:for-each>
+        <xsl:for-each select="*[local-name()='rights']">
+            <xsl:variable name="rights">
+                <xsl:call-template name="jsonescape"></xsl:call-template>
+            </xsl:variable>
+        {
+            "value": "<xsl:value-of select="normalize-space($rights)"/>"
+        },</xsl:for-each>
+        <xsl:for-each select="*[local-name()='coverage']">
+            <xsl:variable name="text" select="text()"/>
+            <xsl:choose>
+            <xsl:when test="starts-with($text,'Time Period')">
+        {
+            "value": "<xsl:value-of select="normalize-space($text)"/>"
+        },</xsl:when>
+            </xsl:choose>
+        </xsl:for-each>
+        <xsl:for-each select="*[local-name()='coverage']">
+            <xsl:variable name="text" select="text()"/>
+            <xsl:choose>
+                <xsl:when test="starts-with($text,'Geographic Coverage')">
+        {
+            "value": "<xsl:value-of select="normalize-space(.)"/>"
+        },</xsl:when>
+            </xsl:choose>
+        </xsl:for-each>
+        <xsl:call-template name="Conditions"/>
+    ]</xsl:template>
+    
+    <!-- template to choose condition displayed based on rights fields -->
+    <xsl:template name="Conditions">
+        <xsl:variable name="allRights">
+            <xsl:for-each select="*[local-name()='rights']">
+                <xsl:value-of select="."/>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="contains($allRights,'UNC faculty')">
+        {
+            "value": "Conditions: restricted unc"
+        }</xsl:when>
+            <xsl:when test="contains($allRights,'Duke faculty')">
+        {
+            "value": "Conditions: restricted duke"
+        }</xsl:when>
+            <xsl:otherwise>
+        {
+            "value": "Conditions: unrestricted"
+        }</xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+<!-- template to escape reserved JSON characters -->
     <xsl:template name="jsonescape">
         <xsl:param name="str" select="."/>
         <xsl:param name="escapeChars" select="'\&quot;'" />
@@ -544,6 +559,7 @@
         </xsl:choose>
     </xsl:template>
 
+<!-- various formatting templates -->
     <xsl:template name="string-replace-all">
         <xsl:param name="text"/>
         <xsl:param name="replace"/>
