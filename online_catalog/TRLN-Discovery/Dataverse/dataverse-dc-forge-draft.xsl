@@ -3,10 +3,11 @@
     xmlns:unc="http://yourdomain.com/lookup" extension-element-prefixes="unc" version="1.0">
     <xsl:output method="text" indent="no"/>
 
+<!-- set up variable for later use -->
     <xsl:variable name="vLower" select="'abcdefghijklmnopqrstuvwxyz'"/>
     <xsl:variable name="vUpper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 
-
+<!-- match each record -->
     <xsl:template match="/">
         <xsl:apply-templates select="*[local-name()='OAI-PMH']"/>
     </xsl:template>
@@ -16,11 +17,7 @@
     </xsl:template>
 
     <xsl:template match="*[local-name()='ListRecords']">
-        <xml>
-            <RECORDS>
                 <xsl:apply-templates select="*[local-name()='record']"/>
-            </RECORDS>
-        </xml>
     </xsl:template>
 
     <xsl:template match="*[local-name()='record']">
@@ -47,9 +44,7 @@
             <xsl:when test="contains($setSpec,'DVD')"/>
             <!-- Filters out DVDs, by examining the third rights element -->
             <xsl:when test="contains($rights,'These data are provided on either CD-ROM or DVD')"/>
-	    <!-- Filters out records available only to Duke, by examining rights elements
-	       <xsl:when test="contains($rights,'Duke faculty, staff, and students only.')"/>
-	    -->
+
             <xsl:otherwise>
 {                    <xsl:apply-templates select="*[local-name()='header']">
                         <xsl:with-param name="setSpec">
@@ -82,11 +77,10 @@
 
     </xsl:template>
 
-
+<!-- matches/creates fields from header and creates constant fields -->
+    
     <xsl:template match="*[local-name()='identifier']" mode="header">
         <xsl:param name="setSpec"/>
-
-
         <!-- The next sequence strips punctuation from the identifier -->
         <xsl:variable name="slash">
             <xsl:text>/</xsl:text>
@@ -173,7 +167,7 @@
         "<xsl:value-of select="substring($dateCataloged,1,8)"/>"
     ],</xsl:template>
 
-
+<!-- matches/creates fields from metadata/dc -->
     <xsl:template match="*[local-name()='metadata']">
         <xsl:param name="setSpec"/>
 
@@ -242,10 +236,7 @@
         </xsl:apply-templates>
     "available": "Available",</xsl:template>
 
-
-
-
-
+<!-- title field -->
     <xsl:template match="*[local-name()='title']">
         <xsl:param name="setSpec"/>
     "title_main":[
@@ -255,7 +246,7 @@
     ],
     "title_sort": "<xsl:value-of select="normalize-space(.)"/>",</xsl:template>
 
-
+<!-- genre field -->
     <xsl:template match="*[local-name()='type']">
 
         <xsl:call-template name="parseGenre">
@@ -307,7 +298,7 @@
         "<xsl:value-of select="normalize-space($string)"/>"
     ],</xsl:template>
 
-
+<!-- creator field -->
     <xsl:template match="*[local-name()='creator']">
         <xsl:param name="setSpec"/>
         {
@@ -316,17 +307,16 @@
             "rel": "creator"
         }</xsl:template>
 
-
-
+<!-- url field -->
     <xsl:template match="*[local-name()='identifier']" mode="qualifieddc">
         <xsl:param name="setSpec"/>
     "url": [
-        "{\"href\":\"<xsl:value-of select="normalize-space(.)"/>"}"
+        "{\"href\":\"<xsl:value-of select="normalize-space(.)"/>\"}"
     ],</xsl:template>
     
     <xsl:template match="*[local-name()='relation']"/>
 
-
+<!-- publication year field -->
     <xsl:template match="*[local-name()='date']">
         <xsl:param name="setSpec"/>
         <xsl:choose>
@@ -340,13 +330,14 @@
         </xsl:choose>
     </xsl:template>
 
-
+<!-- publisher field -->
     <xsl:template match="*[local-name()='publisher']" mode="publisher">
         <xsl:param name="setSpec"/>
     "publisher":[
         "<xsl:value-of select="normalize-space(.)"/>"
     ],</xsl:template>
 
+<!-- imprint field -->
     <xsl:template match="*[local-name()='publisher']" mode="imprint">
         <xsl:param name="setSpec"/>
         
@@ -368,6 +359,7 @@
     ],</xsl:template>
     
 
+<!-- subject fields -->
     <xsl:template match="*[local-name()='subject']">
 
         <xsl:call-template name="parseSubject">
@@ -432,7 +424,7 @@
                     <xsl:with-param name="by" select="$doubledashspace"/>
         </xsl:call-template>"</xsl:template>
 
-
+<!-- subject_geographic field -->
     <xsl:template match="*[local-name()='coverage']">
         <xsl:param name="setSpec"/>
         <xsl:variable name="text" select="normalize-space(text())"/>
@@ -455,13 +447,13 @@
                         <xsl:with-param name="by" select="$null"/>
                     </xsl:call-template>
                 </xsl:variable>
-    "PROP NAME="Spatial"": "<xsl:value-of select="normalize-space($Coverage)"/>",</xsl:when>
+    "subject_geographic": "<xsl:value-of select="normalize-space($Coverage)"/>",</xsl:when>
 
         </xsl:choose>
 
     </xsl:template>
 
-
+<!-- summary field -->
     <xsl:template match="*[local-name()='description']">
         <xsl:variable name="setSpec"/>
         <xsl:variable name="cite" select="text()"/>
@@ -518,7 +510,7 @@
         <xsl:call-template name="Conditions"/>
     ]</xsl:template>
     
-    <!-- template to choose condition displayed based on rights fields -->
+<!-- choose condition displayed based on rights fields -->
     <xsl:template name="Conditions">
         <xsl:variable name="allRights">
             <xsl:for-each select="*[local-name()='rights']">
@@ -559,7 +551,7 @@
         </xsl:choose>
     </xsl:template>
 
-<!-- various formatting templates -->
+<!-- formatting template -->
     <xsl:template name="string-replace-all">
         <xsl:param name="text"/>
         <xsl:param name="replace"/>
@@ -579,51 +571,5 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
-
-    <xsl:template name="parseDelimitedField">
-        <xsl:param name="list"/>
-        <xsl:param name="pvalName"/>
-
-        <xsl:choose>
-
-            <xsl:when test="contains($list, ';')">
-                <xsl:call-template name="writeDelimitedField">
-                    <xsl:with-param name="string" select="substring-before($list, ';')"/>
-                    <xsl:with-param name="pvalName">
-                        <xsl:value-of select="$pvalName"/>
-                    </xsl:with-param>
-                </xsl:call-template>
-
-                <xsl:call-template name="parseDelimitedField">
-                    <xsl:with-param name="list" select="substring-after($list, ';')"/>
-                    <xsl:with-param name="pvalName">
-                        <xsl:value-of select="$pvalName"/>
-                    </xsl:with-param>
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:call-template name="writeDelimitedField">
-                    <xsl:with-param name="string" select="$list"/>
-                    <xsl:with-param name="pvalName">
-                        <xsl:value-of select="$pvalName"/>
-                    </xsl:with-param>
-                </xsl:call-template>
-
-            </xsl:otherwise>
-        </xsl:choose>
-
-    </xsl:template>
-
-
-    <xsl:template name="writeDelimitedField">
-        <xsl:param name="string"/>
-        <xsl:param name="pvalName"/>
-        <xsl:variable name="propertyName" select="$pvalName"/>
-        <PROP NAME="{$propertyName}">
-                <xsl:value-of select="normalize-space($string)"/>
-        </PROP>
-    </xsl:template>
-
 
 </xsl:stylesheet>
