@@ -2,12 +2,14 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:unc="http://yourdomain.com/lookup" extension-element-prefixes="unc" version="1.0">
     <xsl:output method="text" indent="no"/>
-    <xsl:strip-space elements="*"/>
+
+<!-- dont think these are used    
     <xsl:param name="part"/>
 
     <xsl:param name="var-token"/>
 
     <xsl:param name="varGrp-token"/>
+-->
 
 <!-- define variables for later use -->
     <xsl:variable name="ICPSR-raw-id">
@@ -114,7 +116,7 @@
         {
             "value": <xsl:text>"Geographic Coverage: </xsl:text><xsl:apply-templates select="stdyInfo/sumDscr/geogCover" mode="property"/>"
         },</xsl:if>
-        <!--geographic unit-what should this map to?-->        
+    
         <xsl:if test="stdyInfo/sumDscr/geogUnit">
         {
             "value": <xsl:text>"Geographic Unit(s): </xsl:text><xsl:for-each select="stdyInfo/sumDscr/geogUnit"><xsl:value-of select="(.)"/>"</xsl:for-each>
@@ -133,13 +135,13 @@
         <xsl:if test="stdyInfo/sumDscr/dataKind">
     "note_methodology":[<xsl:for-each select="stdyInfo/sumDscr/universe">
         {    
-            "value": "<xsl:text>Universe: </xsl:text><xsl:apply-templates/>"
+            "value": "<xsl:text>Universe: </xsl:text><xsl:value-of select="normalize-space(.)"/>"
         },</xsl:for-each><xsl:for-each select="method/dataColl/collMode">
         {
-            "value": "<xsl:text>Data Source: </xsl:text><xsl:apply-templates/>"
+            "value": "<xsl:text>Data Source: </xsl:text><xsl:value-of select="normalize-space(.)"/>"
         },</xsl:for-each><xsl:for-each select="method/dataColl/sources/dataSrc">
         {
-            "value": "<xsl:text>Data Source: </xsl:text><xsl:apply-templates/>"
+            "value": "<xsl:text>Data Source: </xsl:text><xsl:value-of select="normalize-space(.)"/>"
         },</xsl:for-each>
         {
             "value": "<xsl:text>Data Source: </xsl:text>
@@ -152,7 +154,7 @@
                     <xsl:text>, </xsl:text>
                 </xsl:if>
                 
-                <xsl:apply-templates/>
+                <xsl:value-of select="normalize-space(.)"/>
                 
             </xsl:for-each>"
         }
@@ -314,13 +316,14 @@
     "PROP NAME="Note"": "<xsl:text>Guide to Codebook: </xsl:text><xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
 -->
-<!-- check that these need to be called here-->
+<!-- match stdyDscr and call templates-->
     <xsl:template match="stdyDscr">
         <xsl:apply-templates select="citation"/>
         <xsl:apply-templates select="stdyInfo"/>
         <xsl:apply-templates select="dataAccs"/>
     </xsl:template>
 
+<!-- match stdyInfo and call templates-->
     <xsl:template match="stdyInfo">
         <xsl:apply-templates select="subject" mode="subject_topical"/>
         <xsl:apply-templates select="subject" mode="subject_headings"/>
@@ -419,7 +422,7 @@
         </xsl:choose>
     </xsl:template>
 
-<!--do i need this? this is pulling from date of data collection, not publication, also it's not getting called?-->
+<!-- this is pulling from date of data collection, not publication, also it's not getting called?
     <xsl:template match="collDate">
         <xsl:choose>
             <xsl:when test="@event='single'">
@@ -434,7 +437,7 @@
             </xsl:when>
         </xsl:choose>
     </xsl:template>
-
+-->
 <!-- adds commas to and formats note_general Geographic Coverage -->
     <xsl:template match="geogCover" mode="property">
         <xsl:apply-templates/>
@@ -456,7 +459,7 @@
         <xsl:apply-templates select="dataSrc"/>
     </xsl:template>
     
-<!-- can probalby be combined, used for note_access_restrictions-->
+<!-- create note_access_restrictions-->
     <xsl:template match="dataAccs">
         <xsl:apply-templates select="useStmt"/>
     </xsl:template>
@@ -1725,7 +1728,7 @@
         </td>
     </xsl:template>
 -->
-
+<!-- templates used for formatting within notes fields -->
     <xsl:template match="notes" mode="row">
         <tr>
             <td class="h3">
