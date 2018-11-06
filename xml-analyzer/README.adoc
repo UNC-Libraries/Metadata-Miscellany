@@ -1,0 +1,14 @@
+Script yanked from https://stackoverflow.com/questions/163796/program-to-analyze-a-lot-of-xmls/164830#164830[Stack Overflow] and modified to:
+
+* read XML files from a given directory rather than a web location
+* output full path of each element/node instead of indented element name only
+* not to attempt to re-encode to UTF-8 within this script. It was causing problems. Use xmllint or something to encode to UTF-8 before running this.
+
+See the avove SO link for more on what this does.
+
+==Requirements==
+* Ruby
+
+==Usage==
+
+ruby xml_analyzer.rb relative/path_to/directory_containing_xml_files/

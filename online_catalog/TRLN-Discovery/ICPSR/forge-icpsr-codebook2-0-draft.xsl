@@ -75,13 +75,13 @@
     "id": "<xsl:text>UNCICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
     "rollup_id": "<xsl:text>ICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
     "record_data_source": [
-        "ICPSR"
+        "DDI", "Shared Records", "ICPSR"
     ],
     "url": [
-        "{\"href\":\"<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/>\",\"text\":\"<xsl:text>Access restricted ; authentication may be required.</xsl:text>\"}",
-        "{\"href\":\"<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/\</xsl:text>",<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
-        "{\"href\":\"<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
-        "{\"href\":\"<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for UNC users</xsl:text>\"}"
+        "{\"type\":\"fulltext\",\"href\":\"<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/>\",\"text\":\"<xsl:text>Access restricted ; authentication may be required.</xsl:text>\"}",
+        "{\"type\":\"related\",\"href\":\"<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/\</xsl:text>",<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
+        "{\"type\":\"related\",\"href\":\"<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
+        "{\"type\":\"related\",\"href\":\"<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for UNC users</xsl:text>\"}"
         ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="generalnotes"/><xsl:apply-templates select="stdyDscr" mode="notesmethod"/>
     "edition": [
         {
@@ -94,9 +94,9 @@
     "publisher": [
         "<xsl:value-of select="normalize-space($producer)"/>"
     ],
-    "resource_type": "Dataset – Statistical",
-    "access_type": "Online",
-    "institution": ["unc", "duke", "nccu", "ncsu"],
+    "resource_type": ["Dataset –- Statistical"],
+    "access_type": ["Online"],
+    "institution": ["unc", "duke", "ncsu"],
     "owner": "unc",
     "available": "Available",
     "virtual_collection": [
@@ -441,7 +441,7 @@
 <!-- adds commas to and formats note_general Geographic Coverage -->
     <xsl:template match="geogCover" mode="property">
         <xsl:apply-templates/>
-        <xsl:if test="position()!=last()">, </xsl:if>
+        <xsl:if test="position()!=last()">, </xsl:if>
     </xsl:template>
 
 <!-- never called
@@ -1402,7 +1402,7 @@
         </xsl:if>
         <p class="small">
             <xsl:if test="@fileid">
-                <xsl:value-of select="@fileid"/> </xsl:if>Location:</p>
+                <xsl:value-of select="@fileid"/> </xsl:if>Location:</p>
         <p class="small">
             <xsl:if test="@StartPos"> Start: <xsl:value-of select="@StartPos"/>
                 <br/>
@@ -1461,17 +1461,17 @@
         </p>
     </xsl:template>
     <xsl:template match="preQTxt">
-        <xsl:apply-templates/> </xsl:template>
+        <xsl:apply-templates/> </xsl:template>
     <xsl:template match="qstnLit">
-        <xsl:apply-templates/> </xsl:template>
+        <xsl:apply-templates/> </xsl:template>
     <xsl:template match="postQTxt">
-        <xsl:apply-templates/> </xsl:template>
+        <xsl:apply-templates/> </xsl:template>
     <xsl:template match="forward">
-        <xsl:apply-templates/> </xsl:template>
+        <xsl:apply-templates/> </xsl:template>
     <xsl:template match="backward">
-        <xsl:apply-templates/> </xsl:template>
+        <xsl:apply-templates/> </xsl:template>
     <xsl:template match="ivuInstr">
-        <xsl:apply-templates/> </xsl:template>
+        <xsl:apply-templates/> </xsl:template>
     <xsl:template match="valrng">
         <xsl:if test="@ID">
             <a name="{@ID}"/>
