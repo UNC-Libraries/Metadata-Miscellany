@@ -12,6 +12,22 @@
 -->
 
 <!-- define variables for later use -->
+    <!-- define availabilty variable to determine if record is available from ICPSR/NADAC for later use-->
+    <xsl:variable name="available">
+        <xsl:choose>        
+            <xsl:when test="//text()[contains(.,'data are not available from ICPSR')] 
+                or //text()[contains(.,'resource is not available from ICPSR')]
+                or //text()[contains(.,'data are not available from NADAC')]
+                or //text()[contains(.,'UNAVAILABLE')]">
+                <xsl:text>not available</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>available</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+
     <xsl:variable name="ICPSR-raw-id">
         <xsl:value-of select="codeBook/docDscr[1]/citation[1]/titlStmt[1]/IDNo[1]"/>
     </xsl:variable>
@@ -98,7 +114,10 @@
     "access_type": ["Online"],
     "institution": ["unc", "duke", "ncsu"],
     "owner": "unc",
-    "available": "Available",
+    <xsl:choose>
+    <xsl:when test="$available='not available'">"available": "Not Available",</xsl:when>
+    <xsl:otherwise>"available": "Available",</xsl:otherwise>
+    </xsl:choose>
     "virtual_collection": [
         "TRLN Shared Records. ICPSR."
     ],
