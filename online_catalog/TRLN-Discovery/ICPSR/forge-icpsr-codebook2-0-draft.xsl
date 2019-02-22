@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:unc="http://yourdomain.com/lookup" extension-element-prefixes="unc" version="1.0">
-    <xsl:output method="text" indent="no"/>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+    <xsl:output omit-xml-declaration="yes" method="text" indent="no"/>
 
 <!-- dont think these are used    
     <xsl:param name="part"/>
@@ -15,9 +14,11 @@
     <!-- define availabilty variable to determine if record is available from ICPSR/NADAC for later use-->
     <xsl:variable name="available">
         <xsl:choose>        
-            <xsl:when test="//text()[contains(.,'data are not available from ICPSR')] 
+            <xsl:when test="//text()[contains(.,'data are not available from ICPSR')]
+                or //text()[contains(.,'data are not available for distribution by ICPSR')]
                 or //text()[contains(.,'resource is not available from ICPSR')]
                 or //text()[contains(.,'data are not available from NADAC')]
+                or //text()[contains(.,'study is no longer available')]
                 or //text()[contains(.,'UNAVAILABLE')]">
                 <xsl:text>not available</xsl:text>
             </xsl:when>
@@ -90,13 +91,14 @@
     <xsl:template match="codeBook">{
     "id": "<xsl:text>UNCICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
     "rollup_id": "<xsl:text>ICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>",
+    "local_id": {"value": "<xsl:text>ICPSR</xsl:text><xsl:value-of select="$ICPSR-id"/>", "other": []},
     "record_data_source": [
         "DDI", "Shared Records", "ICPSR"
     ],
     "url": [
         "{\"type\":\"fulltext\",\"href\":\"<xsl:value-of select="$host"/><xsl:value-of select="$ICPSR-id"/>\",\"text\":\"<xsl:text>Access restricted ; authentication may be required.</xsl:text>\"}",
-        "{\"type\":\"related\",\"href\":\"<xsl:text>http://www.icpsr.umich.edu/icpsrweb/ICPSR/help/\</xsl:text>",<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
-        "{\"type\":\"related\",\"href\":\"<xsl:text>http://www.lib.ncsu.edu/data/icpsr.html</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
+        "{\"type\":\"related\",\"href\":\"<xsl:text>https://www.icpsr.umich.edu/icpsrweb/ICPSR/help/</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for Duke users</xsl:text>\"}",
+        "{\"type\":\"related\",\"href\":\"<xsl:text>https://www.lib.ncsu.edu/data/icpsr</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for NCSU users</xsl:text>\"}",
         "{\"type\":\"related\",\"href\":\"<xsl:text>http://guides.lib.unc.edu/aecontent.php?pid=455857</xsl:text>\",\"text\":\"<xsl:text>ICPSR help for UNC users</xsl:text>\"}"
         ],<xsl:apply-templates select="stdyDscr"/><xsl:apply-templates select="stdyDscr" mode="generalnotes"/><xsl:apply-templates select="stdyDscr" mode="notesmethod"/>
     "edition": [
@@ -110,13 +112,20 @@
     "publisher": [
         "<xsl:value-of select="normalize-space($producer)"/>"
     ],
-    "resource_type": ["Dataset –- Statistical"],
-    "access_type": ["Online"],
+    "resource_type": ["Dataset -- Statistical"],
+    <xsl:choose>
+    <xsl:when test="$available='available'">"access_type": ["Online"],</xsl:when>
+    </xsl:choose>
+    <xsl:choose>
+    <xsl:when test="$available='available'">
+    "physical_media": [
+        "Online"
+    ],</xsl:when>
+    </xsl:choose>    
     "institution": ["unc", "duke", "ncsu"],
     "owner": "unc",
     <xsl:choose>
-    <xsl:when test="$available='not available'">"available": "Not Available",</xsl:when>
-    <xsl:otherwise>"available": "Available",</xsl:otherwise>
+    <xsl:when test="$available='available'">"available": "Available",</xsl:when>
     </xsl:choose>
     "virtual_collection": [
         "TRLN Shared Records. ICPSR."
@@ -233,12 +242,12 @@
         {
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "creator",
-            "rel": "creator"
+            "rel": ["creator"]
         },</xsl:for-each>
         {<xsl:for-each select="../../../docDscr/citation/prodStmt/producer">
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "publisher",
-            "rel": "publisher"
+            "rel": ["publisher"]
         }</xsl:for-each>
     ],</xsl:template>
     
@@ -286,7 +295,7 @@
         <xsl:value-of select="substring ($distDate, 1, 4)"/>
     ],
     "date_cataloged": [
-        "<xsl:value-of select="substring ($distDate, 1, 4)"/><xsl:value-of select="substring ($distDate, 6, 2)"/><xsl:value-of select="substring ($distDate, 9, 2)"/>"
+        "<xsl:value-of select="substring ($distDate, 1, 4)"/>-<xsl:value-of select="substring ($distDate, 6, 2)"/>-<xsl:value-of select="substring ($distDate, 9, 2)"/>T05:00:00Z"
     ],</xsl:template>
 
 <!--series fields-->
@@ -488,9 +497,17 @@
     </xsl:template>
     
     <xsl:template match="conditions">
+    <xsl:choose>
+    <xsl:when test="$available='available'">
     "note_access_restrictions": [
         "<xsl:apply-templates select="p"/>"
-    ],</xsl:template>
+    ],</xsl:when>
+    <xsl:otherwise>
+    "note_access_restrictions": [
+        "ICPSR does not provide this data online. ICSPR provides a link to the data owner, who may be contacted about obtaining the data."
+    ],</xsl:otherwise>
+    </xsl:choose>
+    </xsl:template>
 
 <!--never called
     <xsl:template match="disclaimer">
