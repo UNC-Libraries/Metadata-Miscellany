@@ -136,6 +136,7 @@
     },
     "resource_type": ["Dataset – Statistical"],
     "access_type": ["Online"],
+    "physical_media": ["Online"],    
     "institution": ["unc", "duke", "nccu", "ncsu"],
     "owner": "unc",
     "record_data_source":["Shared Records", "Dataverse"],
@@ -148,22 +149,8 @@
 
 
     <xsl:template match="*[local-name()='datestamp']">
-        <xsl:variable name="dash">
-            <xsl:text>-</xsl:text>
-        </xsl:variable>
-        <xsl:variable name="null">
-            <xsl:text/>
-        </xsl:variable>
-        
-        <xsl:variable name="dateCataloged">
-            <xsl:call-template name="string-replace-all">
-                <xsl:with-param name="text" select="."/>
-                <xsl:with-param name="replace" select="$dash"/>
-                <xsl:with-param name="by" select="$null"/>
-            </xsl:call-template>
-        </xsl:variable>
     "date_cataloged": [
-        "<xsl:value-of select="substring($dateCataloged,1,8)"/>"
+        "<xsl:value-of select="substring(.,1,10)"/>T05:00:00Z"
     ],</xsl:template>
 
 <!-- matches/creates fields from metadata/dc -->
@@ -303,7 +290,7 @@
         {
             "name": "<xsl:value-of select="normalize-space(.)"/>",
             "type": "creator",
-            "rel": "creator"
+            "rel": ["creator"]
         }</xsl:template>
 
 <!-- url field -->
@@ -567,7 +554,6 @@
         <xsl:choose>
             <xsl:when test="contains($string, '&lt;')">
                 <xsl:value-of select="substring-before($string, '&lt;')" />
-                <!-- recursive call -->
                 <xsl:call-template name="remove-markup">
                     <xsl:with-param name="string" select="substring-after($string, '&gt;')"/>
                 </xsl:call-template>
