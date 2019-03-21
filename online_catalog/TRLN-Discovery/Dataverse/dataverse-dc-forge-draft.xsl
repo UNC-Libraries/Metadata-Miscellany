@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:unc="http://yourdomain.com/lookup" extension-element-prefixes="unc" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version=".0">
     <xsl:output method="text" indent="no"/>
 
 <!-- set up variable for later use -->
@@ -460,11 +459,16 @@
         <xsl:variable name="description">
             <xsl:call-template name="jsonescape"></xsl:call-template>
         </xsl:variable>
+        <xsl:variable name="description-nomarkup">
+            <xsl:call-template name="remove-markup">
+                <xsl:with-param name="string" select = "$description" />
+            </xsl:call-template>
+        </xsl:variable>
         <xsl:choose>
             <!-- Filters out preferred citation elements into the note field -->
             <xsl:when test="not(starts-with($cite,'Citation'))">
     "note_summary":[
-        "<xsl:value-of select="$description"/>"
+        "<xsl:value-of select="$description-nomarkup"/>"
     ],</xsl:when>
         </xsl:choose>
     </xsl:template>
@@ -486,8 +490,13 @@
             <xsl:variable name="rights">
                 <xsl:call-template name="jsonescape"></xsl:call-template>
             </xsl:variable>
+            <xsl:variable name="rights-nomarkup">
+                <xsl:call-template name="remove-markup">
+                    <xsl:with-param name="string" select = "$rights" />
+                </xsl:call-template>
+            </xsl:variable>
         {
-            "value": "<xsl:value-of select="normalize-space($rights)"/>"
+            "value": "<xsl:value-of select="normalize-space($rights-nomarkup)"/>"
         },</xsl:for-each>
         <xsl:for-each select="*[local-name()='coverage']">
             <xsl:variable name="text" select="text()"/>
@@ -544,9 +553,27 @@
                 <xsl:call-template name="jsonescape">
                     <xsl:with-param name="str" select="substring-after($str, $first)"/>
                 </xsl:call-template>
+                <xsl:call-template name="remove-markup"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$str"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+<!-- template to remove html tags -->
+    <xsl:template name="remove-markup">
+        <xsl:param name="string"/> 
+        <xsl:choose>
+            <xsl:when test="contains($string, '&lt;')">
+                <xsl:value-of select="substring-before($string, '&lt;')" />
+                <!-- recursive call -->
+                <xsl:call-template name="remove-markup">
+                    <xsl:with-param name="string" select="substring-after($string, '&gt;')"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$string"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
