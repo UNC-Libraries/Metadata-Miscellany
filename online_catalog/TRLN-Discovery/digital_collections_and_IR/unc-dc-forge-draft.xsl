@@ -545,7 +545,6 @@
     
     
     
-    
     <xsl:template match="*[local-name()='datestamp']">
         <xsl:variable name="dash">
             <xsl:text>-</xsl:text>
