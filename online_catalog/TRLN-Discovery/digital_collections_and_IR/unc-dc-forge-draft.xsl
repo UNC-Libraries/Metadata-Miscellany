@@ -59,12 +59,11 @@
             </xsl:with-param>
             
         </xsl:apply-templates>
-            <PROP NAME="RelationIsPartOf">
+    "RelationIsPartOf": 
                     <!-- iterates through the lookup table until it finds a match and then outputs the name -->
                     <xsl:for-each select="$strings">
-                        <xsl:value-of select="key(&quot;string&quot;, $setSpec)"/>
+                        "<xsl:value-of select="key(&quot;string&quot;, $setSpec)"/>",
                     </xsl:for-each>
-            </PROP>
     "institution": ["unc", "duke", "ncsu"],
     "owner": "unc"<xsl:text>&#xa;}&#xa;</xsl:text>
     </xsl:template>
@@ -127,29 +126,32 @@
             </xsl:with-param>
         </xsl:apply-templates>
         
-        <xsl:apply-templates select="*[local-name()='date']" mode="dc">
+        <xsl:apply-templates select="*[local-name()='date'][position()=1]" mode="dc">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
         
-        <xsl:apply-templates select="*[local-name()='description']">
+        <xsl:apply-templates select="*[local-name()='publisher'][1]"/>
+        
+        <xsl:apply-templates select="*[local-name()='description'][position()=1]">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
-        
+    "names": [
         <xsl:apply-templates select="*[local-name()='creator']">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
-        
         <xsl:apply-templates select="*[local-name()='contributor']">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
             </xsl:with-param>
         </xsl:apply-templates>
+        <xsl:text>
+    ],</xsl:text>
         <xsl:if test="*[local-name()='subject']">
     "subject_topical": [
         <xsl:for-each select="*[local-name()='subject']">"<xsl:value-of select="."/>"<xsl:if test="position() != last()">,
@@ -168,45 +170,20 @@
     
     <xsl:template match="*[local-name()='qualifieddc']">
         <xsl:param name="setSpec"/>
-        
         <xsl:variable name="createDate">
             <xsl:value-of select="*[local-name()='date']"/>
         </xsl:variable>
-        
         <xsl:variable name="interviewTitle">
             <xsl:value-of select="*[local-name()='title']"/>
         </xsl:variable>
-        
         <xsl:variable name="interviewee">
             <xsl:value-of select="*[local-name()='creator'][1]"/>
         </xsl:variable>
-        
-        <PROP NAME="Availability">
-            <PVAL>
-                <xsl:text>Available</xsl:text>
-            </PVAL>
-        </PROP>	               
-        <PROP NAME="999ItemType">
-            <PVAL>
-                <xsl:text>ELECTRONIC</xsl:text>
-            </PVAL>
-        </PROP>
-        <PROP NAME="999Lib">
-            <PVAL>
-                <xsl:text>er</xsl:text>
-            </PVAL>
-        </PROP>
-        <PROP NAME="999Lib_orig">
-            <PVAL>
-                <xsl:text>er</xsl:text>
-            </PVAL>
-        </PROP>
-        <PROP NAME="999Loc">
-            <PVAL>
-                <xsl:text>NET</xsl:text>
-            </PVAL>
-        </PROP>
-        
+    "Availability": "Available",
+    "999ItemType": "ELECTRONIC",
+    "999Lib": "er",
+    "999Lib_orig": "er",
+    "999Loc": "NET",
         <xsl:apply-templates select="*[local-name()='title']">
             <xsl:with-param name="setSpec">
                 <xsl:value-of select="$setSpec"/>
@@ -354,33 +331,18 @@
             </xsl:variable>
             
             <xsl:if test="$oclcnum != ''">
-                <PROP NAME="OCLCNumber">
-                    <PVAL>
-                        <xsl:value-of select="$oclcnum"/> 
-                    </PVAL>
-                </PROP>        
+    "OCLCNumber": "<xsl:value-of select="$oclcnum"/>",    
             </xsl:if>
         
             </xsl:when>     
         </xsl:choose>
     "id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",
     "rollup_id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "local_id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",
-        <PROP NAME="Digital Collection">
-            <PVAL>
-                <xsl:value-of select="$setSpec"/>
-            </PVAL>
-        </PROP>
-        
-        <xsl:choose>
+    "local_id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",<xsl:choose>
             <xsl:when test="$setSpec='MastersPapers'"> </xsl:when>
             <xsl:when test="$setSpec='ETD'"> </xsl:when>            
             <xsl:otherwise>
-                <PROP NAME="Primary Source">
-                    <PVAL>
-                        <xsl:text>Primary Source</xsl:text>
-                    </PVAL>
-                </PROP>
+    "Primary Source": "Primary Source",
             </xsl:otherwise>
         </xsl:choose>
         
@@ -389,107 +351,69 @@
             
             
             <xsl:when test="contains($set, 'graypc')">
-                <PROP NAME="Item Types">
-                    <PVAL>
+    "Item Types": 
                         <xsl:text>Postcard</xsl:text>
-                    </PVAL>
-                </PROP>
+                   
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Postcard</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="contains($set, 'ncpostcards')">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Postcard</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Postcard</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="contains($set, 'gilmer')">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Map</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Map</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="contains($set, 'ncmaps')">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Map</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Map</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="contains($set, 'sohp')">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Sound Recording</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Oral History</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="contains($set, 'yearbook')">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Book</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Yearbook</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="$setSpec='MastersPapers'">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Thesis</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Thesis</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:when test="contains($set, 'ETD')">
-    "resource_type": ["Thesis"],
-                <PROP NAME="Genre">
-                    <PVAL>
-                        <xsl:text>Thesis</xsl:text>
-                    </PVAL>
-                </PROP>
-            </xsl:when>            
+    "resource_type": ["Thesis"],</xsl:when>            
             <xsl:when test="contains($set, 'morton_highlights')">
                 <PROP NAME="Item Types">
-                    <PVAL>
                         <xsl:text>Photograph</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Genre">
-                    <PVAL>
                         <xsl:text>Photograph</xsl:text>
-                    </PVAL>
                 </PROP>
             </xsl:when>
         </xsl:choose>
@@ -502,22 +426,15 @@
             <xsl:when test="$setSpec='MastersPapers'"></xsl:when>
             <xsl:when test="$setSpec='yearbooks'">
                 <PROP NAME="ThumbnailURL">
-                    
-                    
-                    <PVAL>
                         <xsl:text>http://library.digitalnc.org/cgi-bin/thumbnail.exe?CISOROOT=/yearbooks</xsl:text>
                         <xsl:text>&#38;</xsl:text>
                         <xsl:text>CISOPTR=719</xsl:text>
-                        
-                    </PVAL>
                 </PROP>
                 
             </xsl:when>
             <xsl:otherwise>
                 <PROP NAME="ThumbnailURL">
-                    
                     <!--             http://dc.lib.unc.edu/cgi-bin/thumbnail.exe?CISOROOT=/debry&CISOPTR=36 -->
-                    <PVAL>
                         <xsl:variable name="setname">
                             <xsl:value-of select="substring-before($set,$slash)"/>
                         </xsl:variable>
@@ -534,8 +451,6 @@
                         <xsl:value-of select="$setname"/>
                         <xsl:text>&#38;</xsl:text>
                         <xsl:value-of select="$CISOPTR"/>
-                        
-                    </PVAL>
                 </PROP>
                 
             </xsl:otherwise>
@@ -567,11 +482,11 @@
             </xsl:call-template>
         </xsl:variable>
     "date_cataloged":[
-        "<xsl:value-of select="substring($dateCataloged,1,8)"/>"
+        "<xsl:value-of select="."/>"
     ],
     </xsl:template>
     
-    <xsl:template match="*[local-name()='date']" mode="dc">
+    <xsl:template match="*[local-name()='date'][position()=1]" mode="dc">
         <xsl:param name="setSpec"/>
         <xsl:variable name="dash">
             <xsl:text>-</xsl:text>
@@ -587,27 +502,13 @@
                 <xsl:with-param name="by" select="$null"/>
             </xsl:call-template>
         </xsl:variable>
-        
+
         <xsl:variable name="theyear">
-            <xsl:value-of select="substring($datestring,1,4)"/>
+            <xsl:value-of select="substring($datestring, string-length() -3)"/>
         </xsl:variable>
-        
-        <xsl:variable name="themonth">
-            <xsl:value-of select="substring($datestring,5,2)"/>
-        </xsl:variable>
-        
-        <PROP NAME="YearPublished">
-            <PVAL>
-                <xsl:value-of select="$theyear"/>
-            </PVAL>
-        </PROP>
-        
-        <PROP NAME="DatePublished">
-            <PVAL>
-                <xsl:value-of select="$theyear"/>-<xsl:value-of select="$themonth"/>
-            </PVAL>
-        </PROP>        
-    </xsl:template>    
+    "publication_year": [
+        <xsl:value-of select="$theyear"/>
+    ],</xsl:template>    
     
     <xsl:template match="*[local-name()='title']">
         <xsl:param name="setSpec"/>
@@ -617,16 +518,12 @@
             "value":"<xsl:value-of select="normalize-space(.)"/>"
         }
     ],
-    "title_sort": "<xsl:value-of select="normalize-space(.)"/>",
-        </xsl:if>
-        
+    "title_sort": "<xsl:value-of select="normalize-space(.)"/>",</xsl:if>
     </xsl:template>
     
     <xsl:template match="*[local-name()='type']">
         <PROP NAME="Type">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -641,10 +538,8 @@
                             <xsl:value-of select="normalize-space(.)"/>
                         </xsl:variable>
                         <PROP NAME="Interviewee">
-                            <PVAL>
                                 <xsl:value-of select="normalize-space(.)"/>
                                 <xsl:text> Interviewee</xsl:text>
-                            </PVAL>
                         </PROP>
                     </xsl:when>
                     <xsl:otherwise>
@@ -691,18 +586,14 @@
         <xsl:if test="$setSpec!='MastersPapers'">
             
             <PROP NAME="Extent">
-                <PVAL>
                     <xsl:value-of select="normalize-space(.)"/>
-                </PVAL>
             </PROP>
         </xsl:if>
         
     </xsl:template>
     <xsl:template match="*[local-name()='formatExtent']">
         <PROP NAME="FormatExtent">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -710,17 +601,13 @@
     
     <xsl:template match="*[local-name()='rights']">
         <PROP NAME="Rights">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
     <xsl:template match="*[local-name()='language']">
         <PROP NAME="language">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
         
         <xsl:variable name="length" select="string-length(.)"/>
@@ -728,7 +615,6 @@
         <xsl:variable name="lastchar" select="substring(., $length)"/>
         
         <PROP NAME="Language">
-            <PVAL>
                 <xsl:choose>
                     <xsl:when test="$lastchar = ';'">
                         <xsl:value-of select="substring(., '0', $length)"/>
@@ -737,7 +623,6 @@
                         <xsl:value-of select="normalize-space(.)"/>
                     </xsl:otherwise>
                 </xsl:choose>
-            </PVAL>
         </PROP>
         
         
@@ -748,7 +633,6 @@
         <xsl:variable name="lastchar" select="substring(., $length)"/>
         
         <PROP NAME="FormatMedium">
-            <PVAL>
                 <xsl:choose>
                     <xsl:when test="$lastchar = ';'">
                         <xsl:value-of select="substring(., '0', $length)"/>
@@ -757,7 +641,6 @@
                         <xsl:value-of select="normalize-space(.)"/>
                     </xsl:otherwise>
                 </xsl:choose>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -777,35 +660,23 @@
             </xsl:when>
             <xsl:otherwise>
                 <PROP NAME="SecondaryURL">
-                    <PVAL>
                         <xsl:value-of select="$theurl"/>
                         <xsl:text>|Details on this thesis, including date it will become available online|</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="Access Restrictions">
-                    <PVAL>
                         <xsl:text>This thesis is currently under embargo and is not freely available online. Visit the link in the full record tab to see when it will become available.</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="999Lib">
-                    <PVAL>
                         <xsl:text>UNC</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="999Lib_orig">
-                    <PVAL>
                         <xsl:text>UNC</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="999Loc">
-                    <PVAL>
                         <xsl:text>UNC</xsl:text>
-                    </PVAL>
                 </PROP>
                 <PROP NAME="999ItemNote">
-                    <PVAL>
                         <xsl:text>Embargoed item. Full text not currently available. See details in Full Record tab for more information.</xsl:text>
-                    </PVAL>
                 </PROP>                
             </xsl:otherwise>
         </xsl:choose>
@@ -819,9 +690,7 @@
             <xsl:when test="starts-with(.,'http:')">
                 
                 <PROP NAME="PrimaryURL">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             
@@ -831,9 +700,7 @@
                     <xsl:when test="$setSpec!='sohp'">
                         
                         <PROP NAME="Identifier">
-                            <PVAL>
                                 <xsl:value-of select="normalize-space(.)"/>
-                            </PVAL>
                         </PROP>
                         
                     </xsl:when>
@@ -845,9 +712,7 @@
     </xsl:template>
     <xsl:template match="*[local-name()='host']">
         <PROP NAME="Host">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -857,22 +722,18 @@
         <xsl:choose>
             <xsl:when test="$setSpec!='ETD'">
                 <PROP NAME="Contributor">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="position() &gt; 1">
-                        <PROP NAME="Contributor">
-                            <PVAL>
-                                <xsl:value-of select="normalize-space(.)"/>
-                                <xsl:text>|degree supervisor</xsl:text>
-                            </PVAL>
-                        </PROP> 
-                    </xsl:when>
+        {
+            "name": "<xsl:value-of select="normalize-space(.)"/>",
+            "type": "thesis advisor",
+            "rel": ["thesis advisor"]
+        }<xsl:if test="position() != last()">,</xsl:if></xsl:when>
                 </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
@@ -880,24 +741,18 @@
     
     <xsl:template match="*[local-name()='repository']">
         <PROP NAME="Repository">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     <xsl:template match="*[local-name()='host']">
         <PROP NAME="Host">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
     <xsl:template match="*[local-name()='relation']">
         <PROP NAME="OriginalPublication">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -931,9 +786,7 @@
             <xsl:when test="floor($year) = $year">
                 <!-- need to trim to get first four chars -->
                 <PROP NAME="YearPublished">
-                    <PVAL>
                         <xsl:value-of select="$year"/>
-                    </PVAL>
                 </PROP>
                 <!-- date of interviews follows day - month - year, need to extract year -->
             </xsl:when>
@@ -945,18 +798,14 @@
             <xsl:when test="floor($first4chars) = $first4chars">
                 
                 <PROP NAME="CoverageTemporal">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
                 
             </xsl:when>
             <xsl:when test="floor($last4chars) = $last4chars">
                 
                 <PROP NAME="CoverageTemporal">
-                    <PVAL>
                         <xsl:value-of select="$last4chars"/>
-                    </PVAL>
                 </PROP>
                 
             </xsl:when>
@@ -965,41 +814,24 @@
         
         
         <PROP NAME="DatePublished">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
         
         
         
     </xsl:template>
     
-    <xsl:template match="*[local-name()='publisher']">
-        
+    <xsl:template match="*[local-name()='publisher'][1]">
         <xsl:variable name="length" select="string-length(.)"/>
-        
         <xsl:variable name="lastchar" select="substring(., $length)"/>
-        
-        <PROP NAME="Publisher">
-            <PVAL>
-                <xsl:choose>
-                    <xsl:when test="$lastchar = ';'">
-                        <xsl:value-of select="substring(., '0', $length)"/>
-                        <xsl:text>.</xsl:text>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="normalize-space(.)"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </PVAL>
-        </PROP>        
+    "publisher": [
+        <xsl:choose><xsl:when test="$lastchar = ';'">"<xsl:value-of select="substring(., '0', $length)"/>"<xsl:text>.</xsl:text></xsl:when><xsl:otherwise>"<xsl:value-of select="normalize-space(.)"/>"</xsl:otherwise></xsl:choose>
+    ],        
     </xsl:template>
     
     <xsl:template match="*[local-name()='caption']">
         <PROP NAME="Caption">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -1009,10 +841,8 @@
         <xsl:choose>
             <xsl:when test="$setSpec='ETD'">
                 <PROP NAME="710a">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
                         <xsl:text>|degree granting institution</xsl:text>
-                    </PVAL>
                 </PROP>                
             </xsl:when>
             <xsl:otherwise>
@@ -1028,7 +858,6 @@
         <xsl:choose>
             <xsl:when test="$setSpec='ncmaps'">
                 <PROP NAME="CoverageSpatial">
-                    <PVAL>
                         <xsl:choose>
                             <xsl:when test="position()=1">
                                 <xsl:text>West Longitude </xsl:text>
@@ -1044,14 +873,11 @@
                             </xsl:when>
                         </xsl:choose>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:otherwise>
                 <PROP NAME="Spatial">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
             </xsl:otherwise>
         </xsl:choose>
@@ -1059,9 +885,7 @@
     
     <xsl:template match="*[local-name()='coverageSpatial']">
         <PROP NAME="CoverageSpatial">
-            <PVAL>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -1080,9 +904,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <PROP NAME="PubPlace">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
             </xsl:otherwise>
         </xsl:choose>
@@ -1090,7 +912,7 @@
     
     
     
-    <xsl:template match="*[local-name()='description']">
+    <xsl:template match="*[local-name()='description'][position()=1]">
         <xsl:param name="setSpec"/>
         <xsl:variable name="count">
             <xsl:number format="001"/>
@@ -1099,25 +921,20 @@
         <xsl:choose>
             <xsl:when test="$setSpec='mackinney'">
                 <PROP NAME="Title">
-                    <PVAL>
                         <xsl:value-of select="normalize-space(.)"/>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             
             <xsl:when test="$setSpec='MastersPapers'"> </xsl:when>
-            
             <xsl:otherwise>
                 <xsl:variable name="doubledash">
                     <xsl:text>--</xsl:text>
                 </xsl:variable>
                 <xsl:variable name="doubledashspace">
                     <xsl:text> -- </xsl:text>
-                </xsl:variable>
-    "note_summary": [
+                </xsl:variable>"note_summary": [
         "<xsl:call-template name="jsonescape"/>"
-    ],
-            </xsl:otherwise>
+    ],</xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
@@ -1128,12 +945,10 @@
         </xsl:variable>
         
         <PROP NAME="Abstract">
-            <PVAL>
                 <xsl:text>seq</xsl:text>
                 <xsl:value-of select="$count"/>
                 <xsl:text>|</xsl:text>
                 <xsl:value-of select="normalize-space(.)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
@@ -1226,7 +1041,6 @@
             <xsl:when test="$setSpec='sohp'">
                 
                 <PROP NAME="Title">
-                    <PVAL>
                         <xsl:text>Interview with </xsl:text>
                         <xsl:value-of select="$interviewee"/>
                         <xsl:text> </xsl:text>
@@ -1235,13 +1049,10 @@
                         <xsl:value-of select="$interviewTitle"/>
                         <xsl:text>, </xsl:text>
                         <xsl:value-of select="$sourceString"/>
-                    </PVAL>
                 </PROP>
                 
                 <PROP NAME="Citation">
-                    <PVAL>
                         <xsl:value-of select="$sourceString"/>
-                    </PVAL>
                 </PROP>
             </xsl:when>
             <xsl:otherwise>
@@ -1256,9 +1067,7 @@
                 
                 
                 <PROP NAME="SourceCollection">
-                    <PVAL>
                         <xsl:value-of select="normalize-space($sourceCollection)"/>
-                    </PVAL>
                 </PROP>
             </xsl:otherwise>
         </xsl:choose>
@@ -1292,23 +1101,19 @@
         </xsl:variable>
         
         <PROP NAME="Subject">
-            <PVAL>
                 <xsl:call-template name="string-replace-all">
                     <xsl:with-param name="text" select="$newSubject"/>
                     <xsl:with-param name="replace" select="$doubledash"/>
                     <xsl:with-param name="by" select="$doubledashspace"/>
                 </xsl:call-template>
-            </PVAL>
         </PROP>
         
         <PROP NAME="Subjects">
-            <PVAL>
                 <xsl:call-template name="string-replace-all">
                     <xsl:with-param name="text" select="$newSubject"/>
                     <xsl:with-param name="replace" select="$doubledash"/>
                     <xsl:with-param name="by" select="$doubledashspace"/>
                 </xsl:call-template>
-            </PVAL>
         </PROP>
         
         
@@ -1342,10 +1147,8 @@
     <xsl:template name="writeInterviewer">
         <xsl:param name="string"/>
         <PROP NAME="Interviewer">
-            <PVAL>
                 <xsl:value-of select="normalize-space($string)"/>
                 <xsl:text> Interviewer</xsl:text>
-            </PVAL>
         </PROP>
         
         
@@ -1377,13 +1180,11 @@
     
     
     <xsl:template name="writeCreator">
-        <xsl:param name="string"/>
-        <PROP NAME="Creator">
-            <PVAL>
-                <xsl:value-of select="normalize-space($string)"/>
-            </PVAL>
-        </PROP>
-    </xsl:template>
+        <xsl:param name="string"/>{
+            "name": "<xsl:value-of select="normalize-space($string)"/>",
+            "type": "creator",
+            "rel": ["creator"]
+        },</xsl:template>
     
     <xsl:template name="parseDelimitedField">
         <xsl:param name="list"/>
@@ -1425,10 +1226,7 @@
         <xsl:param name="pvalName"/>
         <xsl:variable name="propertyName" select="$pvalName"/>
         <PROP NAME="{$propertyName}">
-            <PVAL>
-                
                 <xsl:value-of select="normalize-space($string)"/>
-            </PVAL>
         </PROP>
     </xsl:template>
     
