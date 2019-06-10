@@ -3,15 +3,35 @@
     xmlns:unc="http://yourdomain.com/lookup" extension-element-prefixes="unc" version="1.0">
     <xsl:output omit-xml-declaration="yes" method="xml" indent="yes"/>
     
+    <xsl:variable name="setSpec">
+        <xsl:choose>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:City_and_Regional_Planning'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Gillings_ESE'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Gillings_HB'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Gillings_HPM'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Gillings_MCH'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Gillings_Nutrition'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Gillings_PHLP'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:Physician_Assistant_Program'">MastersPapers</xsl:when>
+            <xsl:when test="*[local-name()='OAI-PMH']/*[local-name()='request']/@set='admin_set:SILS'">MastersPapers</xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="*[local-name()='OAI-PMH']/*[local-name()='request']/@set"/>
+            </xsl:otherwise>
+        </xsl:choose>
+
+    </xsl:variable>
+    
     <!--Set up lookup to assign OCLC numbers based on ETD ID, for ETDs-->
     <xsl:variable name="idLookups" select="document('id_map.xml')"/>
     <xsl:key name="idLookup" match="idmapping" use="@etdid"/>
     
     <!-- lookup table for collection lookup for isPartOf -->
+    
     <unc:collections>
-        <string id="bunkers">Eng &amp; Chang Bunker- The Siamese Twins</string>
+        <string id="admin_set:Dissertations">UNC-Chapel Hill Electronic Theses and Dissertations</string>
+        <string id="MastersPapers">UNC-Chapel Hill Master's Paper Collection</string>
+        <!--<string id="bunkers">Eng &amp; Chang Bunker- The Siamese Twins</string>
         <string id="debry">De Bry Engravings</string>
-        <string id="ETD">UNC-Chapel Hill Electronic Theses and Dissertations</string>
         <string id="gilmer">Gilmer Civil War Maps Collection</string>
         <string id="graypc">World War I Postcards from the Bowman Gray Collection</string>
         <string id="mackinney">The MacKinney Collection of Medieval Medical Illustrations</string>
@@ -20,11 +40,10 @@
         <string id="nc_post">North Carolina Postcards</string>
         <string id="ncmaps">North Carolina Maps</string>
         <string id="numismatics">Historic Moneys</string>
-        <string id="MastersPapers">UNC-Chapel Hill Master's Paper Collection</string>
         <string id="sohp">Southern Oral History Program</string>
         <string id="tobacco_bag">Tobacco Bag Stringing Operations in North Carolina and Virginia</string>
         <string id="vir_museum">Virtual Museum</string>
-        <string id="yearbooks">North Carolina College and University Yearbooks</string>
+        <string id="yearbooks">North Carolina College and University Yearbooks</string>-->
     </unc:collections>
     
     <xsl:key name="string" match="unc:collections/string" use="@id"/>
@@ -42,134 +61,198 @@
         <xsl:apply-templates select="*[local-name()='record']"/>
     </xsl:template>
     
+    <!-- create records and set static fields -->
+    
     <xsl:template match="*[local-name()='record']">
-        <xsl:variable name="setSpec">
-            <xsl:value-of select="*[local-name()='header']/*[local-name()='setSpec']"/>
-        </xsl:variable>
         
-        <xsl:text>{</xsl:text>
-        <xsl:apply-templates select="*[local-name()='header']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-templates select="*[local-name()='metadata']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
+        <xsl:text>{&#xA;</xsl:text>
+        
+        <xsl:apply-templates select="*[local-name()='header']"/>
+        
+        <xsl:apply-templates select="*[local-name()='metadata']"/>
+        
+        <!-- iterates through the lookup table until it finds a match and then outputs the name -->
+        <xsl:text>&#x9;"virtual_collection": [&#xA;</xsl:text>
+        <xsl:for-each select="$strings">
+            <xsl:text>&#x9;&#x9;"TRLN Shared Records. </xsl:text>
+            <xsl:value-of select="key(&quot;string&quot;, $setSpec)"/>
+            <xsl:text>."&#xA;</xsl:text>
+        </xsl:for-each>
+        <xsl:text>&#x9;], &#xA;</xsl:text>
+        
+        <xsl:choose>
+            <xsl:when test="$setSpec='admin_set:Dissertations'">
+                <xsl:text>&#x9;"record_data_source": [&#xA;</xsl:text>
+                <xsl:text>&#x9;&#x9;"DC", "Shared Records", "UNC-Chapel Hill Electronic Theses and Dissertations"&#xA;</xsl:text>
+                <xsl:text>&#x9;],&#xA;</xsl:text>
+            </xsl:when>
             
-        </xsl:apply-templates>
-    "RelationIsPartOf": 
-                    <!-- iterates through the lookup table until it finds a match and then outputs the name -->
-                    <xsl:for-each select="$strings">
-                        "<xsl:value-of select="key(&quot;string&quot;, $setSpec)"/>",
-                    </xsl:for-each>
-    "institution": ["unc", "duke", "ncsu"],
-    "owner": "unc"<xsl:text>&#xa;}&#xa;</xsl:text>
+            <xsl:when test="$setSpec='admin_set:MastersPapers'">
+                <xsl:text>&#x9;"record_data_source": [&#xA;</xsl:text>
+                <xsl:text>&#x9;&#x9;"DC", "Shared Records", "UNC-Chapel Hill Master's Paper Collection"&#xA;</xsl:text>
+                <xsl:text>&#x9;],&#xA;</xsl:text>
+            </xsl:when>
+            <!--            
+            <xsl:otherwise>
+    "Primary Source": "Primary Source",
+            </xsl:otherwise>
+-->
+        </xsl:choose>
+        
+        <xsl:text>&#x9;"available": "Available",&#xA;</xsl:text>
+        
+        <xsl:text>&#x9;"physical_media": [&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;"Online"&#xA;</xsl:text>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
+        
+        <xsl:text>&#x9;"access_type": ["Online"],&#xA;</xsl:text>
+        
+        <xsl:text>&#x9;"institution": ["unc", "duke", "ncsu"],&#xA;</xsl:text>
+    
+        <xsl:text>&#x9;"owner": "unc"&#xA;</xsl:text>
+        
+        <xsl:text>}&#xA;</xsl:text>
+        
     </xsl:template>
     
     
-    
     <xsl:template match="*[local-name()='header']">
-        <xsl:param name="setSpec"/>
-        <xsl:apply-templates select="*[local-name()='identifier']" mode="header">
-            <xsl:with-param name="setSpec" select="$setSpec"/>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='identifier']" mode="header"/>
         <xsl:apply-templates select="*[local-name()='datestamp']"/>
     </xsl:template>
     
     <xsl:template match="*[local-name()='metadata']">
-        <xsl:param name="setSpec"/>
-        
-        <xsl:apply-templates select="*[local-name()='qualifieddc']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        
-        <xsl:apply-templates select="*[local-name()='dc']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='qualifieddc']"/>
+        <xsl:apply-templates select="*[local-name()='dc']"/>
     </xsl:template>
     
     <xsl:template match="*[local-name()='dc']">
-        <xsl:param name="setSpec"/>
+     
+        <xsl:apply-templates select="*[local-name()='identifier']" mode="dc"/>
         
-        <xsl:variable name="rightsVal">
-            <xsl:value-of select="*[local-name()='rights']"/>
-        </xsl:variable>
+        <xsl:apply-templates select="*[local-name()='title']"/>
+        
+        <xsl:apply-templates select="*[local-name()='date'][1]" mode="yearPublished"/>
+        
         
         <xsl:choose>
-            <xsl:when test="$rightsVal!='Restricted'">
-    <xsl:text>"available": "Available",</xsl:text>
-    "physical_media": [
-        "Online"
-    ],
-    <xsl:text>"access_type": ["Online"],</xsl:text>
+            <xsl:when test="$setSpec='admin_set:Dissertations' or 'MastersPapers'">                
+                <xsl:choose>
+                    <xsl:when test="*[local-name()='publisher']">
+                        <xsl:text>&#x9;"publisher": [&#xA;</xsl:text>
+                        <xsl:text>&#x9;&#x9;"</xsl:text>
+                        <xsl:value-of select="normalize-space(*[local-name()='publisher'][1])"/>
+                        <xsl:text>"&#xA;</xsl:text>
+                        <xsl:text>&#x9;],&#xA;</xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>&#x9;"publisher": [&#xA;</xsl:text>
+                        <xsl:text>&#x9;&#x9;"University of North Carolina at Chapel Hill"&#xA;</xsl:text>
+                        <xsl:text>&#x9;],&#xA;</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
+            <xsl:otherwise> 
+            </xsl:otherwise>
         </xsl:choose>
         
-        <xsl:apply-templates select="*[local-name()='identifier']" mode="dc">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-            <xsl:with-param name="rightsVal">
-                <xsl:value-of select="$rightsVal"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
         
-        <xsl:apply-templates select="*[local-name()='title']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:text>&#x9;"imprint_main":[&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;"{\"type\":\"imprint\",\"value\":\"</xsl:text>
+        <xsl:if test="$setSpec='admin_set:Dissertations' or 'MastersPapers'">
+            <xsl:text>Chapel Hill, NC</xsl:text>
+        </xsl:if>
+        <xsl:text> : </xsl:text>
+        <xsl:choose>
+            <xsl:when test="$setSpec='admin_set:Dissertations' or 'MastersPapers'">
+                <xsl:choose>
+                    <xsl:when test="*[local-name()='publisher']">
+                        <xsl:value-of select="normalize-space(*[local-name()='publisher'][1])"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>University of North Carolina at Chapel Hill</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+        </xsl:choose>
+        <xsl:text>, </xsl:text>
+        <xsl:apply-templates select="*[local-name()='date'][position()=1]" mode="getYear"/>
+        <xsl:text>.\"}"&#xA;</xsl:text>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
         
-        <xsl:apply-templates select="*[local-name()='date'][position()=1]" mode="dc">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='language'][1]"/>
         
-        <xsl:apply-templates select="*[local-name()='publisher'][1]"/>
+        <xsl:apply-templates select="*[local-name()='type']"/>
         
-        <xsl:apply-templates select="*[local-name()='description'][position()=1]">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
-    "names": [
-        <xsl:apply-templates select="*[local-name()='creator']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:apply-templates select="*[local-name()='contributor']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:text>
-    ],</xsl:text>
+        <xsl:apply-templates select="*[local-name()='description'][position()=1]"/>
+        
+        <xsl:text>&#x9;"statement_of_responsibility": [&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;{&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"value": "by </xsl:text>
+        <xsl:value-of select="*[local-name()='creator']"/>
+        <xsl:text>"&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;}&#xA;</xsl:text>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
+        
+        <xsl:text>&#x9;"names": [&#xA;</xsl:text>
+        <xsl:apply-templates select="*[local-name()='creator']"/>
+        
+        <xsl:text>&#x9;&#x9;{&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"name": "</xsl:text>
+        <xsl:choose>
+            <xsl:when test="$setSpec='admin_set:Dissertations' or 'MastersPapers'">
+                <xsl:choose>
+                    <xsl:when test="*[local-name()='publisher']">
+                        <xsl:value-of select="normalize-space(*[local-name()='publisher'][1])"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>University of North Carolina at Chapel Hill</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+        </xsl:choose>
+        <xsl:text>",&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"type": "publisher",&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"rel": ["publisher"]&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;},&#xA;</xsl:text>
+
+        
+        <xsl:apply-templates select="*[local-name()='contributor']"/>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
+        
+        
         <xsl:if test="*[local-name()='subject']">
-    "subject_topical": [
-        <xsl:for-each select="*[local-name()='subject']">"<xsl:value-of select="."/>"<xsl:if test="position() != last()">,
+            
+            <xsl:text>&#x9;"subject_topical": [&#xA;</xsl:text>
+            <xsl:for-each select="*[local-name()='subject']">
+                <xsl:text>&#x9;&#x9;"</xsl:text>
+                <xsl:value-of select="."/>
+                <xsl:text>"</xsl:text>
+                <xsl:if test="position() != last()">
+                    <xsl:text>,</xsl:text>
+                </xsl:if>
+                <xsl:text>&#xA;</xsl:text>
+            </xsl:for-each>
+            <xsl:text>&#x9;],&#xA;</xsl:text>
+            
+            <xsl:text>&#x9;"subject_headings": [&#xA;</xsl:text>
+            <xsl:for-each select="*[local-name()='subject']">
+                <xsl:text>&#x9;&#x9;{&#xA;</xsl:text>
+                <xsl:text>&#x9;&#x9;&#x9;"value":"</xsl:text>
+                <xsl:value-of select="."/>
+                <xsl:text>"&#xA;</xsl:text>
+                <xsl:text>&#x9;&#x9;}</xsl:text>
+                <xsl:if test="position() != last()">
+                    <xsl:text>,</xsl:text>
+                </xsl:if>
+                <xsl:text>&#xA;</xsl:text>
+            </xsl:for-each>
+            <xsl:text>&#x9;],&#xA;</xsl:text>
+            
         </xsl:if>
-        </xsl:for-each>
-    ],
-    "subject_headings": [
-        <xsl:for-each select="*[local-name()='subject']">{
-            "value":"<xsl:value-of select="."/>"
-        }<xsl:if test="position() != last()">,
-        </xsl:if>
-        </xsl:for-each>
-        </xsl:if>
-    ],
     </xsl:template>
-    
+<!--   
     <xsl:template match="*[local-name()='qualifieddc']">
-        <xsl:param name="setSpec"/>
         <xsl:variable name="createDate">
             <xsl:value-of select="*[local-name()='date']"/>
         </xsl:variable>
@@ -184,25 +267,13 @@
     "999Lib": "er",
     "999Lib_orig": "er",
     "999Loc": "NET",
-        <xsl:apply-templates select="*[local-name()='title']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='title']"/>
         
         <xsl:apply-templates select="*[local-name()='type']"/>
         
-        <xsl:apply-templates select="*[local-name()='creator']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='creator']"/>
         
-        <xsl:apply-templates select="*[local-name()='extent']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='extent']"/>
         
         <xsl:apply-templates select="*[local-name()='formatExtent']"/>
         
@@ -214,11 +285,7 @@
         
         <xsl:apply-templates select="*[local-name()='medium']"/>
         
-        <xsl:apply-templates select="*[local-name()='identifier']" mode="qualifieddc">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='identifier']" mode="qualifieddc"/>
         
         <xsl:apply-templates select="*[local-name()='date']|*[local-name()='created']"/>
         
@@ -228,38 +295,21 @@
         
         <xsl:apply-templates select="*[local-name()='publisher']"/>
         
-        <xsl:apply-templates select="*[local-name()='subject']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='subject']"/>
         
-        <xsl:apply-templates select="*[local-name()='spatial']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='spatial']"/>
         
-        <xsl:apply-templates select="*[local-name()='coverage']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='coverage']"/>
         
         <xsl:apply-templates select="*[local-name()='coverageSpatial']"/>
         
-        <xsl:apply-templates select="*[local-name()='description']">
-            <xsl:with-param name="setSpec">
-                <xsl:value-of select="$setSpec"/>
-            </xsl:with-param>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="*[local-name()='description']"/>
         
         <xsl:apply-templates select="*[local-name()='caption']"/>
         
         <xsl:apply-templates select="*[local-name()='abstract']"/>
         
         <xsl:apply-templates select="*[local-name()='source']">
-            <xsl:with-param name="setSpec" select="$setSpec"/>
             <xsl:with-param name="interviewee">
                 <xsl:value-of select="$interviewee"/>
             </xsl:with-param>
@@ -271,23 +321,23 @@
             </xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
-    
+-->    
     <!-- controls what part of dc:identifier is used to create UniqueId, etc -->
+
     <xsl:template match="*[local-name()='identifier']" mode="header">
-        <xsl:param name="setSpec"/>
         <xsl:variable name="set">
             <xsl:choose>
                 <xsl:when test="contains(., 'digitalnc.org:')">
                     <xsl:value-of select="substring-after(.,'digitalnc.org:')"/>
                 </xsl:when>
                 <!-- inserts collection code after UNC, before uuid -->
-                <xsl:when test="$setSpec='ETD'">
+                <xsl:when test="$setSpec='admin_set:Dissertations'">
                     <xsl:text>ETD</xsl:text>
-                    <xsl:value-of select="substring-after(.,'ir.lib.unc.edu:')"/>
+                    <xsl:value-of select="substring-after(.,'cdr.lib.unc.edu:')"/>
                 </xsl:when>
                 <xsl:when test="$setSpec='MastersPapers'">
                     <xsl:text>MP</xsl:text>
-                    <xsl:value-of select="substring-after(.,'ir.lib.unc.edu:')"/>
+                    <xsl:value-of select="substring-after(.,'cdr.lib.unc.edu:')"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="substring-after(.,'unc.edu:')"/>
@@ -298,7 +348,7 @@
         
         <xsl:variable name="fullid">
             <xsl:choose>
-                <xsl:when test="$setSpec='ETD'">
+                <xsl:when test="$setSpec='admin_set:Dissertations'">
                     <xsl:value-of select="."/>
                 </xsl:when>
                 <xsl:when test="$setSpec='MastersPapers'">
@@ -320,12 +370,12 @@
                 <xsl:with-param name="by" select="$dash"/>
             </xsl:call-template>
         </xsl:variable>
-        
+<!-- 
         <xsl:choose>
-        <xsl:when test="$setSpec='ETD'">
-            <xsl:variable name="oclcnum">
+            <xsl:when test="$setSpec='admin_set:Dissertations'">
+            <xsl:variable name="oclcnum">-->
                 <!-- sets OCLCNumber property based on lookup of etd id in id_map.xml -->
-                <xsl:for-each select="$idLookups">
+        <!--                <xsl:for-each select="$idLookups">
                     <xsl:value-of select="key('idLookup', $fullid)"/>
                 </xsl:for-each>
             </xsl:variable>
@@ -336,27 +386,33 @@
         
             </xsl:when>     
         </xsl:choose>
-    "id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "rollup_id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",
-    "local_id": "<xsl:text>UNCDC</xsl:text><xsl:value-of select="$UniqueId"/>",<xsl:choose>
-            <xsl:when test="$setSpec='MastersPapers'"> </xsl:when>
-            <xsl:when test="$setSpec='ETD'"> </xsl:when>            
-            <xsl:otherwise>
-    "Primary Source": "Primary Source",
-            </xsl:otherwise>
-        </xsl:choose>
+-->        
+        <xsl:text>&#x9;"id": "</xsl:text>
+        <xsl:text>UNCDC</xsl:text>
+        <xsl:value-of select="$UniqueId"/>
+        <xsl:text>",&#xA;</xsl:text>
         
+        <xsl:text>&#x9;"rollup_id": "</xsl:text>
+        <xsl:text>UNCDC</xsl:text>
+        <xsl:value-of select="$UniqueId"/>
+        <xsl:text>",&#xA;</xsl:text>
+        
+        <xsl:text>&#x9;"local_id": "</xsl:text>
+        <xsl:text>UNCDC</xsl:text>
+        <xsl:value-of select="$UniqueId"/>
+        <xsl:text>",&#xA;</xsl:text>
+        
+
+        
+        <!--          
         <xsl:choose>
             
             
-            
+          
             <xsl:when test="contains($set, 'graypc')">
-    "Item Types": 
-                        <xsl:text>Postcard</xsl:text>
-                   
-                <PROP NAME="Genre">
-                        <xsl:text>Postcard</xsl:text>
-                </PROP>
+    "Item Types": "Postcard",
+    "Genre": "Postcard",
+
             </xsl:when>
             <xsl:when test="contains($set, 'ncpostcards')">
                 <PROP NAME="Item Types">
@@ -406,9 +462,11 @@
                         <xsl:text>Thesis</xsl:text>
                 </PROP>
             </xsl:when>
-            <xsl:when test="contains($set, 'ETD')">
-    "resource_type": ["Thesis"],</xsl:when>            
-            <xsl:when test="contains($set, 'morton_highlights')">
+          
+            <xsl:when test="contains($set, 'admin_set:Dissertations')">
+    "resource_type": ["Thesis"],</xsl:when>  
+            
+        <xsl:when test="contains($set, 'morton_highlights')">
                 <PROP NAME="Item Types">
                         <xsl:text>Photograph</xsl:text>
                 </PROP>
@@ -416,14 +474,14 @@
                         <xsl:text>Photograph</xsl:text>
                 </PROP>
             </xsl:when>
-        </xsl:choose>
-        
-        
+
+        </xsl:choose> 
         
         
         <xsl:choose>
-            <xsl:when test="$setSpec='ETD'"></xsl:when>
-            <xsl:when test="$setSpec='MastersPapers'"></xsl:when>
+            <xsl:when test="$setSpec='admin_set:Dissertations'"/>
+            <xsl:when test="$setSpec='MastersPapers'"/>
+         
             <xsl:when test="$setSpec='yearbooks'">
                 <PROP NAME="ThumbnailURL">
                         <xsl:text>http://library.digitalnc.org/cgi-bin/thumbnail.exe?CISOROOT=/yearbooks</xsl:text>
@@ -432,10 +490,10 @@
                 </PROP>
                 
             </xsl:when>
-            <xsl:otherwise>
-                <PROP NAME="ThumbnailURL">
+            <xsl:otherwise>-->
+ 
                     <!--             http://dc.lib.unc.edu/cgi-bin/thumbnail.exe?CISOROOT=/debry&CISOPTR=36 -->
-                        <xsl:variable name="setname">
+        <!-- <xsl:variable name="setname">
                             <xsl:value-of select="substring-before($set,$slash)"/>
                         </xsl:variable>
                         <xsl:variable name="setnum">
@@ -451,14 +509,12 @@
                         <xsl:value-of select="$setname"/>
                         <xsl:text>&#38;</xsl:text>
                         <xsl:value-of select="$CISOPTR"/>
-                </PROP>
+             
                 
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-    
-    
+            </xsl:otherwise> 
+        </xsl:choose>-->
+    </xsl:template> 
+
     
     <xsl:template match="*[local-name()='datestamp']">
         <xsl:variable name="dash">
@@ -467,6 +523,7 @@
         <xsl:variable name="null">
             <xsl:text/>
         </xsl:variable>
+        
         <!-- 
             <PROP NAME="DatePublished">
             <PVAL>
@@ -474,66 +531,79 @@
             </PVAL>
             </PROP>
         -->
-        <xsl:variable name="dateCataloged">
-            <xsl:call-template name="string-replace-all">
-                <xsl:with-param name="text" select="."/>
-                <xsl:with-param name="replace" select="$dash"/>
-                <xsl:with-param name="by" select="$null"/>
-            </xsl:call-template>
-        </xsl:variable>
-    "date_cataloged":[
-        "<xsl:value-of select="."/>"
-    ],
+        
+        <xsl:text>&#x9;"date_cataloged":[&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;"</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>"&#xA;</xsl:text>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
     </xsl:template>
     
-    <xsl:template match="*[local-name()='date'][position()=1]" mode="dc">
-        <xsl:param name="setSpec"/>
-        <xsl:variable name="dash">
-            <xsl:text>-</xsl:text>
-        </xsl:variable>
-        <xsl:variable name="null">
-            <xsl:text/>
+    <xsl:template match="*[local-name()='date'][1]" mode="yearPublished">
+        <xsl:variable name="theyear">
+            <xsl:choose>
+                <xsl:when test="$setSpec='admin_set:Dissertations'">
+                    <xsl:value-of select="substring(., string-length() -3)"/>
+                </xsl:when>
+                <xsl:when test="$setSpec='MastersPapers'">
+                    <xsl:value-of select="substring(., 1,4)"/>
+                </xsl:when>
+            </xsl:choose>
         </xsl:variable>
         
-        <xsl:variable name="datestring">
-            <xsl:call-template name="string-replace-all">
-                <xsl:with-param name="text" select="."/>
-                <xsl:with-param name="replace" select="$dash"/>
-                <xsl:with-param name="by" select="$null"/>
-            </xsl:call-template>
-        </xsl:variable>
-
-        <xsl:variable name="theyear">
-            <xsl:value-of select="substring($datestring, string-length() -3)"/>
-        </xsl:variable>
-    "publication_year": [
+        <xsl:text>&#x9;"publication_year": [&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;</xsl:text>
         <xsl:value-of select="$theyear"/>
-    ],</xsl:template>    
+        <xsl:text>&#xA;&#x9;],&#xA;</xsl:text>
+    </xsl:template>
+    
+    
+    <xsl:template match="*[local-name()='date'][1]" mode="getYear">
+        <xsl:variable name="theyear">
+            <xsl:choose>
+                <xsl:when test="$setSpec='admin_set:Dissertations'">
+                    <xsl:value-of select="substring(., string-length() -3)"/>
+                </xsl:when>
+                <xsl:when test="$setSpec='MastersPapers'">
+                    <xsl:value-of select="substring(., 1,4)"/>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        
+        <xsl:value-of select="$theyear"/>
+        
+    </xsl:template>
+    
     
     <xsl:template match="*[local-name()='title']">
-        <xsl:param name="setSpec"/>
         <xsl:if test="$setSpec!='sohp'">
-    "title_main":[
-        {
-            "value":"<xsl:value-of select="normalize-space(.)"/>"
-        }
-    ],
-    "title_sort": "<xsl:value-of select="normalize-space(.)"/>",</xsl:if>
+            <xsl:text>&#x9;"title_main":[&#xA;</xsl:text>
+            <xsl:text>&#x9;&#x9;{&#xA;</xsl:text>
+            <xsl:text>&#x9;&#x9;&#x9;"value":"</xsl:text>
+            <xsl:value-of select="normalize-space(.)"/>
+            <xsl:text>"&#xA;</xsl:text>
+            <xsl:text>&#x9;&#x9;}&#xA;</xsl:text>
+            <xsl:text>&#x9;],&#xA;</xsl:text>
+            
+            <xsl:text>&#x9;"title_sort": "</xsl:text>
+            <xsl:value-of select="normalize-space(.)"/>
+            <xsl:text>",&#xA;</xsl:text>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="*[local-name()='type']">
-        <PROP NAME="Type">
-                <xsl:value-of select="normalize-space(.)"/>
-        </PROP>
+        <xsl:text>&#x9;"resource_type": ["</xsl:text>
+        <xsl:value-of select="normalize-space(.)"/>
+        <xsl:text>"],&#xA;</xsl:text>
     </xsl:template>
-    
+ 
+
     <xsl:template match="*[local-name()='creator']">
-        <xsl:param name="setSpec"/>
         <xsl:choose>
             <xsl:when test="$setSpec='sohp'">
-                <xsl:choose>
+                <!--<xsl:choose> -->
                     <!-- interviewee is first -->
-                    <xsl:when test="position() &lt; last()">
+                    <!-- <xsl:when test="position() &lt; last()">
                         <xsl:variable name="interviewee">
                             <xsl:value-of select="normalize-space(.)"/>
                         </xsl:variable>
@@ -542,9 +612,9 @@
                                 <xsl:text> Interviewee</xsl:text>
                         </PROP>
                     </xsl:when>
-                    <xsl:otherwise>
+                    <xsl:otherwise> -->
                         <!-- interviewers are second -->
-                        <xsl:choose>
+                        <!-- <xsl:choose>
                             <xsl:when test="contains(., ';')">
                                 <xsl:call-template name="parseInterviewer">
                                     <xsl:with-param name="list" select="."/>
@@ -557,9 +627,10 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:otherwise>
-                </xsl:choose>
+                </xsl:choose>--> 
             </xsl:when>
             
+    
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="contains(., ';')">
@@ -580,9 +651,9 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+   
+
     <xsl:template match="*[local-name()='extent']">
-        <xsl:param name="setSpec"/>
         <xsl:if test="$setSpec!='MastersPapers'">
             
             <PROP NAME="Extent">
@@ -591,25 +662,30 @@
         </xsl:if>
         
     </xsl:template>
+    
+<!--     
     <xsl:template match="*[local-name()='formatExtent']">
         <PROP NAME="FormatExtent">
                 <xsl:value-of select="normalize-space(.)"/>
         </PROP>
     </xsl:template>
     
-    <xsl:template match="*[local-name()='isPartOf']"> </xsl:template>
-    
+    <xsl:template match="*[local-name()='isPartOf']"/>
+   
     <xsl:template match="*[local-name()='rights']">
         <PROP NAME="Rights">
                 <xsl:value-of select="normalize-space(.)"/>
         </PROP>
     </xsl:template>
-    
+-->    
     <xsl:template match="*[local-name()='language']">
-        <PROP NAME="language">
-                <xsl:value-of select="normalize-space(.)"/>
-        </PROP>
-        
+        <xsl:text>&#x9;"language": [&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;"</xsl:text>
+        <xsl:value-of select="normalize-space(.)"/>
+        <xsl:text>"&#xA;</xsl:text>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
+
+<!--        
         <xsl:variable name="length" select="string-length(.)"/>
         
         <xsl:variable name="lastchar" select="substring(., $length)"/>
@@ -624,10 +700,10 @@
                     </xsl:otherwise>
                 </xsl:choose>
         </PROP>
-        
-        
+-->        
     </xsl:template>
-    <xsl:template match="*[local-name()='medium']">
+    
+<!--   <xsl:template match="*[local-name()='medium']">
         <xsl:variable name="length" select="string-length(.)"/>
         
         <xsl:variable name="lastchar" select="substring(., $length)"/>
@@ -643,51 +719,39 @@
                 </xsl:choose>
         </PROP>
     </xsl:template>
+-->
     
     <xsl:template match="*[local-name()='identifier']" mode="dc">
-        <xsl:param name="setSpec"/>
-        <xsl:param name="rightsVal"/>
         
         <xsl:variable name="theurl">
             <xsl:value-of select="normalize-space(.)"/>
-        </xsl:variable>  
+        </xsl:variable>
         
-        <xsl:choose>
-            <xsl:when test="$rightsVal!='Restricted'">
-    "url": [
-        "{\"type\":\"fulltext\",\"href\":\"<xsl:value-of select="$theurl"/>",\"text\":\"http://www.icpsr.umich.edu/icpsrweb/ICPSR/studies/06854\"}",
-    <xsl:text>],</xsl:text>
-            </xsl:when>
+        <xsl:text>&#x9;"url": [&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;"{\"type\":\"fulltext\",\"href\":\"</xsl:text>
+        <xsl:value-of select="$theurl"/>
+        <xsl:text>\",\"text\":\"</xsl:text>
+        <xsl:value-of select="$theurl"/>
+        <xsl:text>\"}"&#xA;</xsl:text>
+        <xsl:text>&#x9;],&#xA;</xsl:text>
+
+<!--
             <xsl:otherwise>
-                <PROP NAME="SecondaryURL">
-                        <xsl:value-of select="$theurl"/>
-                        <xsl:text>|Details on this thesis, including date it will become available online|</xsl:text>
-                </PROP>
-                <PROP NAME="Access Restrictions">
-                        <xsl:text>This thesis is currently under embargo and is not freely available online. Visit the link in the full record tab to see when it will become available.</xsl:text>
-                </PROP>
-                <PROP NAME="999Lib">
-                        <xsl:text>UNC</xsl:text>
-                </PROP>
-                <PROP NAME="999Lib_orig">
-                        <xsl:text>UNC</xsl:text>
-                </PROP>
-                <PROP NAME="999Loc">
-                        <xsl:text>UNC</xsl:text>
-                </PROP>
-                <PROP NAME="999ItemNote">
-                        <xsl:text>Embargoed item. Full text not currently available. See details in Full Record tab for more information.</xsl:text>
-                </PROP>                
-            </xsl:otherwise>
-        </xsl:choose>
+    "SecondaryURL": "Details on this thesis, including date it will become available online",
+    "Access Restrictions": "This thesis is currently under embargo and is not freely available online. Visit the link in the full record tab to see when it will become available.",
+    "999Lib": "UNC",
+    "999Lib_orig": "UNC",
+    "999Loc": "UNC",
+    "999ItemNote": "Embargoed item. Full text not currently available. See details in Full Record tab for more information.",
+            </xsl:otherwise> -->
+
     </xsl:template>
-    
+<!--    
     <xsl:template match="*[local-name()='identifier']" mode="qualifieddc">
-        <xsl:param name="setSpec"/>
         
-        <xsl:choose>
+        <xsl:choose>-->
             <!-- ignore identifier elements that begin with Interviewee name -->
-            <xsl:when test="starts-with(.,'http:')">
+            <!-- <xsl:when test="starts-with(.,'http:')">
                 
                 <PROP NAME="PrimaryURL">
                         <xsl:value-of select="normalize-space(.)"/>
@@ -708,37 +772,42 @@
             </xsl:otherwise>
         </xsl:choose>
         
-        
     </xsl:template>
+    
     <xsl:template match="*[local-name()='host']">
         <PROP NAME="Host">
                 <xsl:value-of select="normalize-space(.)"/>
         </PROP>
-    </xsl:template>
+    </xsl:template> -->
     
     <xsl:template match="*[local-name()='contributor']">
-        <xsl:param name="setSpec"/>
         
         <xsl:choose>
-            <xsl:when test="$setSpec!='ETD'">
-                <PROP NAME="Contributor">
+            <xsl:when test="$setSpec='admin_set:Dissertations' or $setSpec='MastersPapers'">
+                <xsl:choose>
+                    <xsl:when test="position() &gt; 1">
+                        <xsl:text>&#x9;&#x9;{&#xA;</xsl:text>
+                        <xsl:text>&#x9;&#x9;&#x9;"name": "</xsl:text>
                         <xsl:value-of select="normalize-space(.)"/>
-                </PROP>
+                        <xsl:text>",&#xA;</xsl:text>
+                        <xsl:text>&#x9;&#x9;&#x9;"type": "thesis advisor",&#xA;</xsl:text>
+                        <xsl:text>&#x9;&#x9;&#x9;"rel": ["thesis advisor"]&#xA;</xsl:text>
+                        <xsl:text>&#x9;&#x9;}</xsl:text>
+                        <xsl:if test="position() != last()">
+                            <xsl:text>,</xsl:text>
+                        </xsl:if>
+                        <xsl:text>&#xA;</xsl:text>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
             
             <xsl:otherwise>
-                <xsl:choose>
-                    <xsl:when test="position() &gt; 1">
-        {
-            "name": "<xsl:value-of select="normalize-space(.)"/>",
-            "type": "thesis advisor",
-            "rel": ["thesis advisor"]
-        }<xsl:if test="position() != last()">,</xsl:if></xsl:when>
-                </xsl:choose>
+
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+ 
+ <!--
     <xsl:template match="*[local-name()='repository']">
         <PROP NAME="Repository">
                 <xsl:value-of select="normalize-space(.)"/>
@@ -755,6 +824,7 @@
                 <xsl:value-of select="normalize-space(.)"/>
         </PROP>
     </xsl:template>
+-->
     
     <xsl:template match="*[local-name()='date']|*[local-name()='created']">
         <xsl:variable name="length" select="string-length(.)"/>
@@ -780,21 +850,21 @@
         
         
         
-        
+<!--        
         <xsl:choose>
-            <!-- we have an integer -->
+
             <xsl:when test="floor($year) = $year">
-                <!-- need to trim to get first four chars -->
+>
                 <PROP NAME="YearPublished">
                         <xsl:value-of select="$year"/>
                 </PROP>
-                <!-- date of interviews follows day - month - year, need to extract year -->
+
             </xsl:when>
         </xsl:choose>
         
         
         <xsl:choose>
-            <!-- String begins with a year -->
+
             <xsl:when test="floor($first4chars) = $first4chars">
                 
                 <PROP NAME="CoverageTemporal">
@@ -819,27 +889,25 @@
         
         
         
-    </xsl:template>
-    
+    </xsl:template>-->
+</xsl:template>    
     <xsl:template match="*[local-name()='publisher'][1]">
-        <xsl:variable name="length" select="string-length(.)"/>
-        <xsl:variable name="lastchar" select="substring(., $length)"/>
-    "publisher": [
-        <xsl:choose><xsl:when test="$lastchar = ';'">"<xsl:value-of select="substring(., '0', $length)"/>"<xsl:text>.</xsl:text></xsl:when><xsl:otherwise>"<xsl:value-of select="normalize-space(.)"/>"</xsl:otherwise></xsl:choose>
-    ],        
+
+                <xsl:value-of select="normalize-space(.)"/>
+
     </xsl:template>
-    
+<!--    
     <xsl:template match="*[local-name()='caption']">
         <PROP NAME="Caption">
                 <xsl:value-of select="normalize-space(.)"/>
         </PROP>
     </xsl:template>
-    
+-->
+<!--    
     <xsl:template match="*[local-name()='subject']">
-        <xsl:param name="setSpec"/>
         
         <xsl:choose>
-            <xsl:when test="$setSpec='ETD'">
+            <xsl:when test="$setSpec='admin_set:Dissertations'">
                 <PROP NAME="710a">
                         <xsl:value-of select="normalize-space(.)"/>
                         <xsl:text>|degree granting institution</xsl:text>
@@ -852,13 +920,12 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+-->
+<!--
     <xsl:template match="*[local-name()='spatial']">
-        <xsl:param name="setSpec"/>
         <xsl:choose>
             <xsl:when test="$setSpec='ncmaps'">
-                <PROP NAME="CoverageSpatial">
-                        <xsl:choose>
+    "CoverageSpatial": "<xsl:choose>
                             <xsl:when test="position()=1">
                                 <xsl:text>West Longitude </xsl:text>
                             </xsl:when>
@@ -872,8 +939,7 @@
                                 <xsl:text>South Latitude </xsl:text>
                             </xsl:when>
                         </xsl:choose>
-                        <xsl:value-of select="normalize-space(.)"/>
-                </PROP>
+                        <xsl:value-of select="normalize-space(.)"/>",
             </xsl:when>
             <xsl:otherwise>
                 <PROP NAME="Spatial">
@@ -882,15 +948,14 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+-->
+<!--     
     <xsl:template match="*[local-name()='coverageSpatial']">
-        <PROP NAME="CoverageSpatial">
-                <xsl:value-of select="normalize-space(.)"/>
-        </PROP>
+    "CoverageSpatial": "<xsl:value-of select="normalize-space(.)"/>",
     </xsl:template>
-    
+-->
+<!--
     <xsl:template match="*[local-name()='coverage']">
-        <xsl:param name="setSpec"/>
         <xsl:choose>
             <xsl:when test="$setSpec='ncmaps'">
                 <xsl:call-template name="parseDelimitedField">
@@ -909,36 +974,35 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+-->    
     
     
     <xsl:template match="*[local-name()='description'][position()=1]">
-        <xsl:param name="setSpec"/>
         <xsl:variable name="count">
             <xsl:number format="001"/>
         </xsl:variable>
         
         <xsl:choose>
+            <!--
             <xsl:when test="$setSpec='mackinney'">
                 <PROP NAME="Title">
                         <xsl:value-of select="normalize-space(.)"/>
                 </PROP>
             </xsl:when>
-            
-            <xsl:when test="$setSpec='MastersPapers'"> </xsl:when>
+            -->
+            <xsl:when test="$setSpec='MastersPapers' or 'admin_set:Dissertations'">
+                <xsl:text>&#x9;"note_summary": [&#xA;</xsl:text>
+                <xsl:text>&#x9;&#x9;"</xsl:text>
+                <xsl:call-template name="jsonescape"/>
+                <xsl:text>"&#xA;</xsl:text>
+                <xsl:text>&#x9;],&#xA;</xsl:text>
+                </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="doubledash">
-                    <xsl:text>--</xsl:text>
-                </xsl:variable>
-                <xsl:variable name="doubledashspace">
-                    <xsl:text> -- </xsl:text>
-                </xsl:variable>"note_summary": [
-        "<xsl:call-template name="jsonescape"/>"
-    ],</xsl:otherwise>
+            </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
     
-    
+<!--    
     <xsl:template match="*[local-name()='abstract']">
         <xsl:variable name="count">
             <xsl:number format="001"/>
@@ -951,7 +1015,7 @@
                 <xsl:value-of select="normalize-space(.)"/>
         </PROP>
     </xsl:template>
-    
+-->    
     <xsl:template name="string-replace-all">
         <xsl:param name="text"/>
         <xsl:param name="replace"/>
@@ -971,7 +1035,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+<!--    
     <xsl:template name="parseSubject">
         <xsl:param name="list"/>
         
@@ -997,9 +1061,9 @@
         </xsl:choose>            
         </xsl:if>
     </xsl:template>
-    
+-->
+<!--
     <xsl:template match="*[local-name()='source']">
-        <xsl:param name="setSpec"/>
         <xsl:param name="interviewee"/>
         <xsl:param name="createDate"/>
         <xsl:param name="interviewTitle"/>
@@ -1075,7 +1139,8 @@
         
         
     </xsl:template>
-    
+-->    
+<!--    
     <xsl:template name="writeSubjects">
         <xsl:param name="subject"/>
         <xsl:variable name="length" select="string-length($subject)"/>
@@ -1094,10 +1159,10 @@
         </xsl:variable>
         
         <xsl:variable name="doubledash">
-            <xsl:text>--</xsl:text>
+            <xsl:text> - </xsl:text>
         </xsl:variable>
         <xsl:variable name="doubledashspace">
-            <xsl:text> -- </xsl:text>
+            <xsl:text> - </xsl:text>
         </xsl:variable>
         
         <PROP NAME="Subject">
@@ -1116,9 +1181,8 @@
                 </xsl:call-template>
         </PROP>
         
-        
     </xsl:template>
-    
+
     <xsl:template name="parseInterviewer">
         <xsl:param name="list"/>
         
@@ -1153,7 +1217,7 @@
         
         
     </xsl:template>
-    
+-->    
     <xsl:template name="parseCreator">
         <xsl:param name="list"/>
         
@@ -1180,11 +1244,15 @@
     
     
     <xsl:template name="writeCreator">
-        <xsl:param name="string"/>{
-            "name": "<xsl:value-of select="normalize-space($string)"/>",
-            "type": "creator",
-            "rel": ["creator"]
-        },</xsl:template>
+        <xsl:param name="string"/>
+        <xsl:text>&#x9;&#x9;{&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"name": "</xsl:text>
+        <xsl:value-of select="normalize-space($string)"/>
+        <xsl:text>",&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"type": "creator",&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;&#x9;"rel": ["creator"]&#xA;</xsl:text>
+        <xsl:text>&#x9;&#x9;},&#xA;</xsl:text>
+    </xsl:template>
     
     <xsl:template name="parseDelimitedField">
         <xsl:param name="list"/>
