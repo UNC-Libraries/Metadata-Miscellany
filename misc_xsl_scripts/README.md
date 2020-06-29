@@ -13,3 +13,6 @@ This script deletes the originInfo/dateCreated element if the record also has a 
 
 ### ncmc_name_extraction.xsl
 Extracts names from BXC metadata exports and turns them into a spreadsheet with some added data.
+
+### sohp-mods-xml-to-csv
+Converts mods export from the SOHP/DCR collection into CSV based on known fields.
