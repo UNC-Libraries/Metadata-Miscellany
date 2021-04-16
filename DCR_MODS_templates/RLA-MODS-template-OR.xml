@@ -1,0 +1,38 @@
+<!-- For Prefix -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bulkMetadata>
+
+<!-- For Row Template -->
+
+<object pid="{{cells['﻿PID'].value)}}">
+<update type="MODS">
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink">
+	{{"<mods:subject displayLabel=\"RLA Site Code\" xlink:href=\"https://rla.lib.unc.edu/rla/cdr/" + cells['Site'].value.replace(' ', '%20') + "/context/site\"><mods:geographic>" + cells['Site'].value.replace('"', '').escape('xml') + "</mods:geographic></mods:subject>"}}
+	{{forNonBlank(cells['Negative_No'].value,v,'<mods:identifier displayLabel="Negative Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
+	{{forNonBlank(cells['Slide_No'].value,v,'<mods:identifier displayLabel="Slide Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
+	{{forNonBlank(cells['Dig_Image_No'].value,v,'<mods:identifier displayLabel="Digital Image Number">' + v.escape('xml') + '</mods:identifier>','')}}
+	{{forNonBlank(cells['Dig_Art_Image_No'].value,v,'<mods:identifier displayLabel="Digital Artifact Image Number">' + v.escape('xml') + '</mods:identifier>','')}}
+	<mods:identifier displayLabel="RLA Filename" type="local">{{cells['Current Filename'].value.replace('"', '').escape('xml')}}</mods:identifier>
+	{{forNonBlank(cells['Access'].value,v,'<mods:identifier displayLabel="RLA Accession Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
+	{{forNonBlank(cells['Cultural Component'].value,v,'<mods:subject displayLabel="Cultural Component"><mods:temporal>' + v.escape('xml') + '</mods:temporal></mods:subject>','')}}
+	{{forNonBlank(cells['Catalog Number'].value,v,"<mods:note displayLabel=\"RLA Catalog Number\" xlink:href=\"https://rla.lib.unc.edu/rla/cdr/" + cells['Catalog Number'].value + "/context/specimen\">" + v.escape('xml') + "</mods:note>",'')}}
+	{{forNonBlank(cells['Context'].value,v,'<mods:note displayLabel="Context">' + v.escape('xml') + '</mods:note>','')}}
+	<mods:subject><mods:genre authority="local">{{cells['Subject'].value.replace('"', '').escape('xml')}}</mods:genre></mods:subject>
+	<mods:originInfo><mods:dateCaptured>{{cells['Photo_Date'].value.replace('"', '').escape('xml')}}</mods:dateCaptured></mods:originInfo>
+	{{forNonBlank(cells['Direction'].value,v,'<mods:note displayLabel="Photograph Direction">' + v.escape('xml') + '</mods:note>','')}}
+	<mods:name type="personal"><mods:namePart>{{cells['Photographer'].value.replace('"', '').escape('xml')}}</mods:namePart><mods:role><mods:roleTerm>Photographer</mods:roleTerm></mods:role></mods:name>
+	<mods:physicalDescription><mods:extent>{{cells['Format'].value.replace('"', '').escape('xml')}}</mods:extent></mods:physicalDescription>
+	<mods:subject><mods:genre authority="local">{{cells['Category'].value.replace('"', '').escape('xml')}}</mods:genre></mods:subject>
+	{{forNonBlank(cells['Comment'].value,v,'<mods:note>' + v.escape('xml') + '</mods:note>','')}}
+	<mods:titleInfo><mods:title>{{cells['New Filename'].value.replace('"', '').escape('xml')}}</mods:title></mods:titleInfo>
+</mods:mods>
+</update>
+</object>
+
+<!-- Row Separator: line break -->
+
+</bulkMetadata>
+
+
+

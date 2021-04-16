@@ -1,0 +1,56 @@
+<!-- For Prefix -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bulkMetadata>
+
+<!-- For Row Template -->
+
+<object pid="{{cells['﻿PID'].value)}}">
+<update type="MODS">
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	{{forNonBlank(cells['Title'].value,v,'<mods:titleInfo>
+		<mods:title>' + v.escape('xml') + '</mods:title>
+	</mods:titleInfo>','')}}
+	{{forNonBlank(cells['Date'].value,v,'<mods:originInfo>
+		<mods:dateCreated>' + v.escape('xml') + '</mods:dateCreated>
+	</mods:originInfo>','')}}
+	<mods:name type="personal">
+         <mods:namePart type="given">{{cells['first name'].value.replace('"', '').escape('xml')}}</mods:namePart>
+         <mods:namePart type="family">{{cells['last name'].value.replace('"', '').escape('xml')}}</mods:namePart>
+         <mods:role>
+         	<mods:roleTerm authority="marcrelator" type="text">{{cells['ROLE'].value.replace('"', '').escape('xml')}}</mods:roleTerm>
+         </mods:role>
+         <mods:affiliation>{{cells['affiliation'].value.replace('"', '').escape('xml')}}</mods:affiliation>
+    </mods:name>
+    <mods:name type="personal">
+         <mods:namePart type="given">{{cells['first name 2'].value.replace('"', '').escape('xml')}}</mods:namePart>
+         <mods:namePart type="family">{{cells['last name 2'].value.replace('"', '').escape('xml')}}</mods:namePart>
+         <mods:role>
+         	<mods:roleTerm authority="marcrelator" type="text">{{cells['ROLE 2'].value.replace('"', '').escape('xml')}}</mods:roleTerm>
+         </mods:role>
+         <mods:affiliation>{{cells['affiliation 2'].value.replace('"', '').escape('xml')}}</mods:affiliation>
+    </mods:name>
+    <mods:name type="personal">
+         <mods:namePart type="given">{{cells['first name 3'].value.replace('"', '').escape('xml')}}</mods:namePart>
+         <mods:namePart type="family">{{cells['last name 3'].value.replace('"', '').escape('xml')}}</mods:namePart>
+         <mods:role>
+         	<mods:roleTerm authority="marcrelator" type="text">{{cells['ROLE 3'].value.replace('"', '').escape('xml')}}</mods:roleTerm>
+         </mods:role>
+         <mods:affiliation>{{cells['affiliation 3'].value.replace('"', '').escape('xml')}}</mods:affiliation>
+    </mods:name>
+    <mods:relatedItem type="host">
+    	<mods:titleInfo>
+    		<mods:title>{{cells['YOUR HEALTH® Radio'].value.replace('"', '').escape('xml')}}</mods:title>
+    	</mods:titleInfo>
+    </mods:relatedItem>
+    <mods:location>
+    	<mods:url>{{cells['URL'].value.replace('"', '').escape('xml')}}</mods:url>
+    </mods:location>
+    {{forNonBlank(cells['keywords'].value,v,'<mods:note displayLabel="Keywords">' + v.escape('xml') + '</mods:note>','')}}
+</mods:mods>
+</update>
+</object>
+
+<!-- Row Separator: line break -->
+
+</bulkMetadata>

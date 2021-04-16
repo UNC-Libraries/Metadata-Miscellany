@@ -1,0 +1,38 @@
+<!-- For Prefix -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<bulkMetadata>
+
+<!-- For Row Template -->
+
+<object pid="{{cells['﻿PID'].value)}}">
+<update type="MODS">
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink">
+	{{forNonBlank(cells['Interviewee'].value,v,'<mods:name type="personal">
+		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
+		<mods:role>
+			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
+		</mods:role>
+	</mods:name>','')}}
+	{{forNonBlank(cells['Interviewer'].value,v,'<mods:name type="personal">
+		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
+		<mods:role>
+			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
+		</mods:role>
+	</mods:name>','')}}
+	{{forNonBlank(cells['Title'].value,v,'<mods:titleInfo>
+		<mods:title>' + v.escape('xml') + '</mods:title>
+	</mods:titleInfo>','')}}
+	{{forNonBlank(cells['Date Created'].value,v,'<mods:originInfo>
+		<mods:dateCreated encoding="iso8601">' + v.escape('xml') + '</mods:dateCreated>
+	</mods:originInfo>','')}}
+	{{forNonBlank(cells['Identifier'].value,v,'<mods:identifier type="local">' + v.escape('xml') + '</mods:identifier>','')}}
+	{{forNonBlank(cells['Interview Number'].value,v,'<mods:note displayLabel="Interview Number">' + v.escape('xml') + '</mods:note>','')}}
+	<mods:typeOfResource>sound recording-nonmusical</mods:typeOfResource>
+</mods:mods>
+</update>
+</object>
+
+<!-- Row Separator: line break -->
+
+</bulkMetadata>
