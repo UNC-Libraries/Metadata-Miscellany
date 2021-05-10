@@ -1,0 +1,45 @@
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3">
+    <mods:name type="personal">
+        <mods:namePart />
+        <mods:role>
+            <mods:roleTerm authority="marcrelator" type="text">Interviewee</mods:roleTerm>
+        </mods:role>
+        <mods:description>Gender Identity, Sexuality: </mods:description>
+        <mods:description>Ethnic or Racial Identity: </mods:description>
+        <mods:description>Pronouns: </mods:description>
+        <mods:description>Age at recording: </mods:description>
+        <mods:description>Participant Correct Spelling: </mods:description>
+    </mods:name>
+    <mods:name type="corporate">
+        <mods:namePart />
+        <mods:role>
+            <mods:roleTerm authority="marcrelator" type="text">Producer</mods:roleTerm>
+        </mods:role>
+    </mods:name>
+    <mods:name type="personal">
+        <mods:namePart />
+        <mods:role>
+            <mods:roleTerm authority="marcrelator" type="text">Interviewer</mods:roleTerm>
+        </mods:role>
+    </mods:name>
+    <mods:titleInfo>
+        <mods:title />
+    </mods:titleInfo>
+    <mods:abstract displayLabel="Description" />
+    <mods:note displayLabel="Place of Interview" />
+    <mods:note displayLabel="Interviewee Keywords and Topics" />
+    <mods:note displayLabel="Locations" />
+    <mods:subject>
+        <mods:topic />
+    </mods:subject>
+    <mods:physicalDescription>
+        <mods:extent />
+    </mods:physicalDescription>
+    <mods:originInfo>
+        <mods:dateCreated encoding="w3cdtf" />
+    </mods:originInfo>
+    <mods:genre authority="lcgft" />
+    <mods:identifier displayLabel="Collection Number" type="local" />
+    <mods:note displayLabel="Notes" />
+    <mods:accessCondition displayLabel="Rights" type="use and reproduction" xlink:href="https://creativecommons.org/licenses/by-nc-sa/3.0/" xmlns:xlink="http://www.w3.org/1999/xlink" />
+</mods:mods>
