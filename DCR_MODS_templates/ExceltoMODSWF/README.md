@@ -1,0 +1,2 @@
+# Excel to MODS workflow
+For instructions on following the Excel to MODS workflow, please see [DCR: Excel to MODS](https://adminliveunc.sharepoint.com/sites/DigitalCollectionsDocumentation/SitePages/DCR--Excel-to-MODS.aspx).
