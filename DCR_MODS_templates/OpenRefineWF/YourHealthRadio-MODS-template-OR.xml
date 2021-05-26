@@ -5,7 +5,7 @@
 
 <!-- For Row Template -->
 
-<object pid="{{cells['﻿PID'].value)}}">
+{{"<object pid=\"" + cells['PID'].value + "\">"}}
 <update type="MODS">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	{{forNonBlank(cells['Title'].value,v,'<mods:titleInfo>
