@@ -31,21 +31,18 @@
          <mods:affiliation>{{cells['affiliation 2'].value.replace('"', '').escape('xml')}}</mods:affiliation>
     </mods:name>
     <mods:name type="personal">
-         <mods:namePart type="given">{{cells['first name 3'].value.replace('"', '').escape('xml')}}</mods:namePart>
-         <mods:namePart type="family">{{cells['last name 3'].value.replace('"', '').escape('xml')}}</mods:namePart>
-         <mods:role>
-         	<mods:roleTerm authority="marcrelator" type="text">{{cells['ROLE 3'].value.replace('"', '').escape('xml')}}</mods:roleTerm>
-         </mods:role>
-         <mods:affiliation>{{cells['affiliation 3'].value.replace('"', '').escape('xml')}}</mods:affiliation>
-    </mods:name>
+    {{forNonBlank(cells['first name 3'].value,v,'<mods:namePart type="given">' + v.escape('xml') + '</mods:namePart>','')}}
+    {{forNonBlank(cells['last name 3'].value,v,'<mods:namePart type="family">' + v.escape('xml') + '</mods:namePart>','')}}
+    {{forNonBlank(cells['ROLE 3'].value,v,'<mods:role><mods:roleTerm authority="marcrelator" type="text">' + v.escape('xml') + '</mods:roleTerm></mods:role>','')}}
+    {{forNonBlank(cells['affiliation 3'].value,v,'<mods:affiliation>' + v.escape('xml') + '</mods:affiliation></mods:name>','</mods:name>')}}
     <mods:relatedItem type="host">
     	<mods:titleInfo>
     		<mods:title>{{cells['YOUR HEALTH® Radio'].value.replace('"', '').escape('xml')}}</mods:title>
     	</mods:titleInfo>
     </mods:relatedItem>
-    <mods:location>
-    	<mods:url>{{cells['URL'].value.replace('"', '').escape('xml')}}</mods:url>
-    </mods:location>
+    {{forNonBlank(cells['URL'].value,v,'<mods:location>
+        <mods:url>' + v.escape('xml') + '</mods:url>
+    </mods:location>','')}}
     {{forNonBlank(cells['keywords'].value,v,'<mods:note displayLabel="Keywords">' + v.escape('xml') + '</mods:note>','')}}
 </mods:mods>
 </update>
