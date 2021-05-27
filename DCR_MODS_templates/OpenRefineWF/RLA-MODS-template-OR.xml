@@ -5,7 +5,7 @@
 
 <!-- For Row Template -->
 
-<object pid="{{cells['﻿PID'].value)}}">
+{{"<object pid=\"" + cells['PID'].value + "\">"}}
 <update type="MODS">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink">
 	{{"<mods:subject displayLabel=\"RLA Site Code\" xlink:href=\"https://rla.lib.unc.edu/rla/cdr/" + cells['Site'].value.replace(' ', '%20') + "/context/site\"><mods:geographic>" + cells['Site'].value.replace('"', '').escape('xml') + "</mods:geographic></mods:subject>"}}
