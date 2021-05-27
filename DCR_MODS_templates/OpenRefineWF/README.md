@@ -1,7 +1,10 @@
 # Open Refine to MODS workflow
 This workflow involves creating and uploading a CSV to OpenRefine and then using OpenRefine's templating export function and the XML template files in this directory to generate MODS XML.
 ## Create CSV
-There are blank CSVs available here which correspond to each OpenRefine export template. You can use these as a starting point for creating the CSV with your metadata that you will use to generate MODS. Note that if you change the name of one of the columns in the CSV you will need to edit the OpenRefine template as well or the data in that column will not be converted to MODS.
+There are blank CSVs available here which correspond to each OpenRefine export template. You can use these as a starting point for creating the CSV with your metadata that you will use to generate MODS. Note that if you change the name of one of the columns in the CSV you will need to edit the OpenRefine template as well or the data in that column will not be converted to MODS. To download a CSV, click the **Raw** button to open it in the browser and then right click > save as to save the file. 
+
+![Sample CSV in OpenRefine](screenshots/blankCSV.PNG)
+
 ## Upload CSV to OpenRefine
 Once you have your CSV with all the metadata you would like converted to MODS, upload the CSV to OpenRefine.
 
