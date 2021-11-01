@@ -5,8 +5,8 @@
 
 <!-- For Row Template -->
 
-{{"<object pid=\"" + cells['﻿PID'].value + "\">"}}
-<update type="MODS">
+{{"<object pid=\"" + cells['PID'].value + "\">"}}
+<datastream type="md_descriptive" operation="update">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink">
 	{{forNonBlank(cells['Interviewee'].value,v,'<mods:name type="personal">
 		<mods:namePart>' + v.escape('xml') + '</mods:namePart>','')}}
@@ -42,7 +42,7 @@
 	<mods:typeOfResource>sound recording-nonmusical</mods:typeOfResource>
 	<mods:genre authority="lcgft">Oral histories</mods:genre>
 </mods:mods>
-</update>
+</datastream>
 </object>
 
 <!-- Row Separator: line break -->

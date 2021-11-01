@@ -6,7 +6,7 @@
 <!-- For Row Template -->
 
 {{"<object pid=\"" + cells['PID'].value + "\">"}}
-<update type="MODS">
+<datastream type="md_descriptive" operation="update">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink">
 	{{"<mods:subject displayLabel=\"RLA Site Code\" xlink:href=\"https://rla.lib.unc.edu/rla/cdr/" + cells['Site'].value.replace(' ', '%20') + "/context/site\"><mods:geographic>" + cells['Site'].value.replace('"', '').escape('xml') + "</mods:geographic></mods:subject>"}}
 	{{forNonBlank(cells['Negative_No'].value,v,'<mods:identifier displayLabel="Negative Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
@@ -27,7 +27,7 @@
 	{{forNonBlank(cells['Comment'].value,v,'<mods:note>' + v.escape('xml') + '</mods:note>','')}}
 	<mods:titleInfo><mods:title>{{cells['New Filename'].value.replace('"', '').escape('xml')}}</mods:title></mods:titleInfo>
 </mods:mods>
-</update>
+</datastream>
 </object>
 
 <!-- Row Separator: line break -->

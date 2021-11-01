@@ -6,7 +6,7 @@
 <!-- For Row Template -->
 
 {{"<object pid=\"" + cells['PID'].value + "\">"}}
-<update type="MODS">
+<datastream type="md_descriptive" operation="update">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	{{forNonBlank(cells['Contributor (Participant) Name'].value,v,'<mods:name type="personal">
 		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
@@ -52,7 +52,7 @@
 	{{forNonBlank(cells['Notes'].value,v,'<mods:note displayLabel="Notes">' + v.escape('xml') + '</mods:note>','')}}
 	{{forNonBlank(cells['Rights'].value,v,'<mods:accessCondition displayLabel="Rights" type="use and reproduction" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://creativecommons.org/licenses/by-nc-sa/3.0/">' + v.escape('xml') + '</mods:accessCondition>','')}}
 </mods:mods>
-</update>
+</datastream>
 </object>
 
 <!-- Row Separator: line break -->
