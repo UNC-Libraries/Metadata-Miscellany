@@ -5,8 +5,19 @@ There are blank CSVs available here which correspond to each OpenRefine export t
 
 ![Sample CSV in OpenRefine](screenshots/blankCSV.PNG)
 
+## Edit and save CSV
+Open CSV in Excel and enter your metadata. When you are finished, delete the first row of the spreadsheet with the column names, and File > Save as "CSV UTF-8 (comma delimited)".
+
 ## Upload CSV to OpenRefine
-Once you have your CSV with all the metadata you would like converted to MODS, upload the CSV to OpenRefine.
+Open the original "-blankCSV" file in a text editor. This will be used to create the column names in OpenRefine.
+
+![Column Names](screenshots/getcolumnnames.PNG)
+
+Upload the CSV to OpenRefine. On the **Create Project** page, make sure **Character encoding** is UTF-8 and Commas (CSV) is selected under **Columns are separated by**. Copy the column names from the "-blankCSV" file and enter them in the **Column names (comma separated)** box. 
+
+![Create Project in OpenRefine](screenshots/OR-create-project.PNG)
+
+If the preview looks good, select **Create Project**.
 
 ![Sample CSV in OpenRefine](screenshots/OR-CSV-upload.PNG)
 
