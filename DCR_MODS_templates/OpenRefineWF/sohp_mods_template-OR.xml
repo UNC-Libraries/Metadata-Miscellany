@@ -29,7 +29,7 @@
 		</mods:role>
 	</mods:name>','
 		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
+			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
 		</mods:role>
 	</mods:name>')}}
 	{{forNonBlank(cells['Title'].value,v,'<mods:titleInfo>
