@@ -6,16 +6,21 @@ There are blank CSVs available here which correspond to each OpenRefine export t
 ![Sample CSV in OpenRefine](screenshots/blankCSV.PNG)
 
 ## Edit and save CSV
-Open CSV in Excel and enter your metadata. When you are finished, delete the first row of the spreadsheet with the column names, and File > Save as "CSV UTF-8 (comma delimited)".
+Open CSV in Excel and enter your metadata. When you are finished, File > Save as "CSV UTF-8 (comma delimited)".
+
+## Remove BOM created by Excel
+Open your CSV in Notepad++. Look for UTF-8-BOM in bottom right corner.
+
+![UTF-8-BOM in Notepad++](screenshots/nppBOM.PNG)
+
+In the Encoding menu, select "Convert to UTF-8". Confirm that bottom right corner now reads UTF-8. Save file.
+
+![Convert to UTF-8 in Notepad++](screenshots/npp-removeBOM.PNG)
 
 ## Upload CSV to OpenRefine
-Open the original "-blankCSV" file in a text editor. This will be used to create the column names in OpenRefine.
+Upload the CSV to OpenRefine. On the **Create Project** page, make sure **Character encoding** is UTF-8 and Commas (CSV) is selected under **Columns are separated by**.
 
-![Column Names](screenshots/getcolumnnames.PNG)
-
-Upload the CSV to OpenRefine. On the **Create Project** page, make sure **Character encoding** is UTF-8 and Commas (CSV) is selected under **Columns are separated by**. Copy the column names from the "-blankCSV" file and enter them in the **Column names (comma separated)** box. 
-
-![Create Project in OpenRefine](screenshots/OR-create-project.PNG)
+![Create Project in OpenRefine](screenshots/parse-data-as.PNG)
 
 If the preview looks good, select **Create Project**.
 
