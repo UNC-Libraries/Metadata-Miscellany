@@ -36,7 +36,7 @@
 		<mods:title>' + v.escape('xml') + '</mods:title>
 	</mods:titleInfo>','')}}
 	{{forNonBlank(cells['Date Created'].value,v,'<mods:originInfo>
-		<mods:dateCreated encoding="iso8601">' + v.escape('xml') + '</mods:dateCreated>
+		<mods:dateCreated encoding="w3cdtf">' + v.escape('xml') + '</mods:dateCreated>
 	</mods:originInfo>','')}}
 	{{forNonBlank(cells['Interview Number'].value,v,'<mods:identifier displayLabel="Interview Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
 	<mods:typeOfResource>sound recording-nonmusical</mods:typeOfResource>
