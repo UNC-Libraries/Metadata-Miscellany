@@ -20,7 +20,7 @@
 		<mods:identifier displayLabel="Source Media Identifier">' + v.escape('xml') + '</mods:identifier>
 	</mods:relatedItem>','')}}
 	{{forNonBlank(cells['Collection Number'].value,v,'<mods:identifier displayLabel="Collection Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
-	{{forNonBlank(cells['Description of folder contents'].value,v,'<mods:note displayLabel="Description" type="local">' + v.escape('xml') + '</mods:note>','')}}
+	{{forNonBlank(cells['Description of folder contents'].value,v,'<mods:note displayLabel="Description">' + v.escape('xml') + '</mods:note>','')}}
 </mods:mods>
 </datastream>
 </object>
