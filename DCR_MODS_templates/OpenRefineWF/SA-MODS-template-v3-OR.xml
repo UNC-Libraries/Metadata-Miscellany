@@ -7,7 +7,7 @@
 
 {{"<object pid=\"" + cells['PID'].value + "\">"}}
 <datastream type="md_descriptive" operation="update">
-<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	{{forNonBlank(cells['Contributor (Participant) Name'].value,v,'<mods:name type="personal">
 		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
 		<mods:role>
@@ -34,23 +34,23 @@
 	{{forNonBlank(cells['Title'].value,v,'<mods:titleInfo>
 		<mods:title>' + v.escape('xml') + '</mods:title>
 	</mods:titleInfo>','')}}
-	{{forNonBlank(cells['Description'].value,v,'<mods:abstract displayLabel="Description">' + v.escape('xml') + '</mods:abstract>','')}}
+	{{forNonBlank(cells['Description'].value,v,'<mods:abstract>' + v.escape('xml') + '</mods:abstract>','')}}
 	{{forNonBlank(cells['Place of Interview'].value,v,'<mods:note displayLabel="Place of Interview">' + v.escape('xml') + '</mods:note>','')}}
 	{{forNonBlank(cells['Interviewee Keywords and Topics'].value,v,'<mods:note displayLabel="Interviewee Keywords and Topics">' + v.escape('xml') + '</mods:note>','')}}
 	{{forNonBlank(cells['Locations'].value,v,'<mods:note displayLabel="Locations">' + v.escape('xml') + '</mods:note>','')}}
 	{{forNonBlank(cells['Subjects'].value,v,'<mods:subject>
 		<mods:topic>' + v.escape('xml') + '</mods:topic>
 	</mods:subject>','')}}
-	{{forNonBlank(cells['Extent'].value,v,'<mods:physicalDescription>
-		<mods:extent>' + v.escape('xml') + '</mods:extent>
+	{{forNonBlank(cells['Extent'].value,v,'<mods:physicalDescription displayLabel="Duration">
+		<mods:extent unit="hours">' + v.escape('xml') + '</mods:extent>
 	</mods:physicalDescription>','')}}
 	{{forNonBlank(cells['Created Date'].value,v,'<mods:originInfo>
-		<mods:dateCreated encoding="w3cdtf">' + v.escape('xml') + '</mods:dateCreated>
+		<mods:dateCreated encoding="edtf">' + v.escape('xml') + '</mods:dateCreated>
 	</mods:originInfo>','')}}
 	{{forNonBlank(cells['Genre'].value,v,'<mods:genre authority="lcgft">' + v.escape('xml') + '</mods:genre>','')}}
 	{{forNonBlank(cells['Collection Number'].value,v,'<mods:identifier displayLabel="Collection Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
-	{{forNonBlank(cells['Notes'].value,v,'<mods:note displayLabel="Notes">' + v.escape('xml') + '</mods:note>','')}}
-	{{forNonBlank(cells['Rights'].value,v,'<mods:accessCondition displayLabel="Rights" type="use and reproduction" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://creativecommons.org/licenses/by-nc-sa/3.0/">' + v.escape('xml') + '</mods:accessCondition>','')}}
+	{{forNonBlank(cells['Notes'].value,v,'<mods:note>' + v.escape('xml') + '</mods:note>','')}}
+	{{forNonBlank(cells['Rights'].value,v,'<mods:accessCondition displayLabel="License" type="use and reproduction" xlink:href="https://creativecommons.org/licenses/by-nc-sa/3.0/">' + v.escape('xml') + '</mods:accessCondition>','')}}
 </mods:mods>
 </datastream>
 </object>
