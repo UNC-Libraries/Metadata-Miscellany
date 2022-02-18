@@ -21,7 +21,7 @@
 	<mods:subject><mods:genre authority="local">{{cells['Subject'].value.replace('"', '').escape('xml')}}</mods:genre></mods:subject>
 	<mods:originInfo><mods:dateCaptured>{{cells['Photo_Date'].value.replace('"', '').escape('xml')}}</mods:dateCaptured></mods:originInfo>
 	{{forNonBlank(cells['Direction'].value,v,'<mods:note displayLabel="Photograph Direction">' + v.escape('xml') + '</mods:note>','')}}
-	<mods:name type="personal"><mods:namePart>{{cells['Photographer'].value.replace('"', '').escape('xml')}}</mods:namePart><mods:role><mods:roleTerm>Photographer</mods:roleTerm></mods:role></mods:name>
+	<mods:name type="personal"><mods:namePart>{{cells['Photographer'].value.replace('"', '').escape('xml')}}</mods:namePart><mods:role><mods:roleTerm authority="marcrelator" type="text">Photographer</mods:roleTerm></mods:role></mods:name>
 	<mods:physicalDescription><mods:extent>{{cells['Format'].value.replace('"', '').escape('xml')}}</mods:extent></mods:physicalDescription>
 	<mods:subject><mods:genre authority="local">{{cells['Category'].value.replace('"', '').escape('xml')}}</mods:genre></mods:subject>
 	{{forNonBlank(cells['Comment'].value,v,'<mods:note>' + v.escape('xml') + '</mods:note>','')}}
