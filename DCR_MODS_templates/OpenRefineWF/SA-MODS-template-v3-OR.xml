@@ -50,7 +50,7 @@
 	{{forNonBlank(cells['Genre'].value,v,'<mods:genre authority="lcgft">' + v.escape('xml') + '</mods:genre>','')}}
 	{{forNonBlank(cells['Collection Number'].value,v,'<mods:identifier displayLabel="Collection Number" type="local">' + v.escape('xml') + '</mods:identifier>','')}}
 	{{forNonBlank(cells['Notes'].value,v,'<mods:note>' + v.escape('xml') + '</mods:note>','')}}
-	{{forNonBlank(cells['Rights'].value,v,'<mods:accessCondition displayLabel="License" type="use and reproduction" xlink:href="https://creativecommons.org/licenses/by-nc-sa/3.0/">' + v.escape('xml') + '</mods:accessCondition>','')}}
+	{{forNonBlank(cells['Rights'].value,v,'<mods:accessCondition displayLabel="License" type="use and reproduction" xlink:href="https://creativecommons.org/licenses/by-nc-sa/4.0/">' + v.escape('xml') + '</mods:accessCondition>','')}}
 </mods:mods>
 </datastream>
 </object>
