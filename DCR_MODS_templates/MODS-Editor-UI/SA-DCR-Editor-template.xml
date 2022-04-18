@@ -41,5 +41,5 @@
     <mods:genre authority="lcgft" />
     <mods:identifier displayLabel="Collection Number" type="local" />
     <mods:note />
-    <mods:accessCondition displayLabel="License" type="use and reproduction" xlink:href="https://creativecommons.org/licenses/by-nc-sa/3.0/" />
+    <mods:accessCondition displayLabel="License" type="use and reproduction" xlink:href="https://creativecommons.org/licenses/by-nc-sa/4.0/" />
 </mods:mods>
