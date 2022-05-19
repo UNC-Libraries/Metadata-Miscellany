@@ -8,87 +8,16 @@
 {{"<object pid=\"" + cells['PID'].value + "\">"}}
 <datastream type="md_descriptive" operation="update">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink">
-	{{forNonBlank(cells['Interviewee 1'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewee 1 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewee 2'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewee 2 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewee 3'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewee 3 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewee 4'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewee 4 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewee 5'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewee 5 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-
-	{{forNonBlank(cells['Interviewer 1'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewer 1 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewer 2'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewer 2 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewer 3'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewer 3 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewer 4'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewer 4 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
-	{{forNonBlank(cells['Interviewer 5'].value,v,'<mods:name type="personal">
-		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
-		<mods:role>
-			<mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm>
-		</mods:role>','')}}
-	{{forNonBlank(cells['Interviewer 5 Date'].value,v,'
-		<mods:namePart type="date">' + v.escape('xml') + '</mods:namePart>
-	</mods:name>','</mods:name>')}}
+	{{forNonBlank(cells['Interviewee 1'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewee 1 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewee 2'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewee 2 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewee 3'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewee 3 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewee 4'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewee 4 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewee 5'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewee 5 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewer 1'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewer 1 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewer 2'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewer 2 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewer 3'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewer 3 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewer 4'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewer 4 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm></mods:role></mods:name>', '')}}
+	{{forNonBlank(cells['Interviewer 5'].value, v, '<mods:name type="personal"><mods:namePart>' + v.escape('xml') + '</mods:namePart>' + forNonBlank(cells['Interviewer 5 Date'].value, b, '<mods:namePart type="date">' + b.escape('xml') + '</mods:namePart>', '') + '<mods:role><mods:roleTerm type="text" authority="marcrelator">Interviewer</mods:roleTerm></mods:role></mods:name>', '')}}
 	{{forNonBlank(cells['Title'].value,v,'<mods:titleInfo>
 		<mods:title>' + v.escape('xml') + '</mods:title>
 	</mods:titleInfo>','')}}
