@@ -8,16 +8,38 @@
 {{"<object pid=\"" + cells['PID'].value + "\">"}}
 <datastream type="md_descriptive" operation="update">
 <mods:mods xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	{{forNonBlank(cells['Contributor (Participant) Name'].value,v,'<mods:name type="personal">
+	{{forNonBlank(cells['Contributor 1 (Participant) Name'].value,v,'<mods:name type="personal">
 		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
 		<mods:role>
 			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
 		</mods:role>','')}}
-		{{forNonBlank(cells['Gender Identity, Sexuality'].value,v,'<mods:description>Gender Identity, Sexuality: ' + v.escape('xml') + '</mods:description>','')}}
-		{{forNonBlank(cells['Ethnic or Racial Identity'].value,v,'<mods:description>Ethnic or Racial Identity: ' + v.escape('xml') + '</mods:description>','')}}
-		{{forNonBlank(cells['Pronouns'].value,v,'<mods:description>Pronouns: ' + v.escape('xml') + '</mods:description>','')}}
-		{{forNonBlank(cells['Age at recording'].value,v,'<mods:description>Age at recording: ' + v.escape('xml') + '</mods:description>','')}}
-		{{forNonBlank(cells['Participant Correct Spelling'].value,v,'<mods:description>Participant Correct Spelling: ' + v.escape('xml') + '</mods:description>
+		{{forNonBlank(cells['Gender Identity, Sexuality (Contributor 1)'].value,v,'<mods:description>Gender Identity, Sexuality: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Ethnic or Racial Identity (Contributor 1)'].value,v,'<mods:description>Ethnic or Racial Identity: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Pronouns (Contributor 1)'].value,v,'<mods:description>Pronouns: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Age at recording (Contributor 1)'].value,v,'<mods:description>Age at recording: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Participant Correct Spelling (Contributor 1)'].value,v,'<mods:description>Participant Correct Spelling: ' + v.escape('xml') + '</mods:description>
+	</mods:name>','</mods:name>')}}
+	{{forNonBlank(cells['Contributor 2 (Participant) Name'].value,v,'<mods:name type="personal">
+		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
+		<mods:role>
+			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
+		</mods:role>','')}}
+		{{forNonBlank(cells['Gender Identity, Sexuality (Contributor 2)'].value,v,'<mods:description>Gender Identity, Sexuality: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Ethnic or Racial Identity (Contributor 2)'].value,v,'<mods:description>Ethnic or Racial Identity: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Pronouns (Contributor 2)'].value,v,'<mods:description>Pronouns: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Age at recording (Contributor 2)'].value,v,'<mods:description>Age at recording: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Participant Correct Spelling (Contributor 2)'].value,v,'<mods:description>Participant Correct Spelling: ' + v.escape('xml') + '</mods:description>
+	</mods:name>','</mods:name>')}}
+	{{forNonBlank(cells['Contributor 3 (Participant) Name'].value,v,'<mods:name type="personal">
+		<mods:namePart>' + v.escape('xml') + '</mods:namePart>
+		<mods:role>
+			<mods:roleTerm type="text" authority="marcrelator">Interviewee</mods:roleTerm>
+		</mods:role>','')}}
+		{{forNonBlank(cells['Gender Identity, Sexuality (Contributor 3)'].value,v,'<mods:description>Gender Identity, Sexuality: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Ethnic or Racial Identity (Contributor 3)'].value,v,'<mods:description>Ethnic or Racial Identity: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Pronouns (Contributor 3)'].value,v,'<mods:description>Pronouns: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Age at recording (Contributor 3)'].value,v,'<mods:description>Age at recording: ' + v.escape('xml') + '</mods:description>','')}}
+		{{forNonBlank(cells['Participant Correct Spelling (Contributor 3)'].value,v,'<mods:description>Participant Correct Spelling: ' + v.escape('xml') + '</mods:description>
 	</mods:name>','</mods:name>')}}
 	{{forNonBlank(cells['Producer'].value,v,'<mods:name type="corporate">
 		<mods:namePart>' + v.escape('xml') + '</mods:namePart>

@@ -10,6 +10,28 @@
         <mods:description>Age at recording: </mods:description>
         <mods:description>Participant Correct Spelling: </mods:description>
     </mods:name>
+    <mods:name type="personal">
+        <mods:namePart />
+        <mods:role>
+            <mods:roleTerm authority="marcrelator" type="text">Interviewee</mods:roleTerm>
+        </mods:role>
+        <mods:description>Gender Identity, Sexuality: </mods:description>
+        <mods:description>Ethnic or Racial Identity: </mods:description>
+        <mods:description>Pronouns: </mods:description>
+        <mods:description>Age at recording: </mods:description>
+        <mods:description>Participant Correct Spelling: </mods:description>
+    </mods:name>
+    <mods:name type="personal">
+        <mods:namePart />
+        <mods:role>
+            <mods:roleTerm authority="marcrelator" type="text">Interviewee</mods:roleTerm>
+        </mods:role>
+        <mods:description>Gender Identity, Sexuality: </mods:description>
+        <mods:description>Ethnic or Racial Identity: </mods:description>
+        <mods:description>Pronouns: </mods:description>
+        <mods:description>Age at recording: </mods:description>
+        <mods:description>Participant Correct Spelling: </mods:description>
+    </mods:name>
     <mods:name type="corporate">
         <mods:namePart />
         <mods:role>
