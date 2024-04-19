@@ -13,3 +13,9 @@ This script deletes the originInfo/dateCreated element if the record also has a 
 
 ### ncmc_name_extraction.xsl
 Extracts names from BXC metadata exports and turns them into a spreadsheet with some added data.
+
+### artmfa-adddegree.xsl
+A simple example of testing for the presence of a field, and if the field is not present, adding a constant value.
+
+### addDigitalCollection.xsl
+Example script which adds a Digital Collection field with a contstant value to all records.
