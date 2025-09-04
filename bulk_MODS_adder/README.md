@@ -15,3 +15,7 @@ One column in the CSV should be labeled "pid" and include the full PID as listed
 This script is written so that the MODS and XLINK namespaces are added to every MODS parent element (mods:mods), which is a requirement for SOHP interviews in DCR. Different collections may have different namespace requirements. Refer to comments in the code to see where namespaces and their placements are defined.
 
 This script is written to add the "identifier" MODS element, and the attributes that are particular to it in SOHP interviews in DCR. Refer to comments in the code to see where the element to add and its attributes are defined. 
+
+## AI Disclosure Statement
+
+This script was written with the assistance of generative AI.
